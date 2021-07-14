@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 import './Timer.css';
 
 const MINIUTE = 60;
-const SHORT = 0, LONG = 1;
-// let TIMER_CNT = 1; // deprecated - at keydown, prevent other clock start 
 
 function Timer(props) {
     let initTime = 3; // 초기값 props.settingsObj.timerTime
@@ -13,7 +11,7 @@ function Timer(props) {
     // const [onBreak, setOnBreak] = useState(false);
     let onBreak = false;
 
-    const [curTime, setCurTime] = useState(-1);
+    const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
     const [clock, setClock] = useState("00:00");
 
     //======================================================
@@ -21,7 +19,7 @@ function Timer(props) {
     useEffect(() => {
         // ===================================================
         // DEBUGGING
-        console.log(`${props.timer_type} : ${curTime}`);
+        console.log(`Timer ${props.timer_type} : ${curTime}`);
         // ===================================================
 
         let time = curTime;
@@ -40,9 +38,9 @@ function Timer(props) {
 
     // countDown
     useEffect(() => {
-        console.log(`Changed time : ${curTime}`);
-
         if(didStart){
+            if(curTime == -1) setCurTime(onBreak ? initBreak : initTime); // starting a new timer
+
             const refreshInterval = setInterval(() => {
                 if(curTime == 0) {
                     // beep(clockIdx);
