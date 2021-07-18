@@ -1,23 +1,42 @@
-import React from 'react'
+import React, {useState, useEffect, useRef} from 'react';
 import './SettingsModal.css';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 
 export default function SettingsModal(props) {
+    const [timerMin, setTimerMin] = useState(25);
+    
+    useEffect(()=>{
+        console.log(timerMin);
+    }, [timerMin]);
+  
     function saveSettings(){
-        alert("hello");
-        props.save(100);
+        alert("Settings saved");
+        props.save(timerMin);
         props.close();
-        alert("bye");
     }
 
     return (
         <Modal isOpen={props.isOpen} onRequestClose={props.close}>
-            This is Modal content
-            <button onClick={props.close}> Close </button>
+            <div className="modal" id="modal" >
+                <div className="modal-header">
+                    <span className="title">Pomodoro Settings</span>
+                    <button className="close-button" onClick={props.close}> &times; </button>
+                </div>
 
-            <button className="settings-save" onClick={saveSettings}>save</button>  
+                <form onSubmit={saveSettings}>
+                    <div className="settings-input-time">
+                        <label>
+                            Timer
+                            <input type="number" step="5" min="0" max="99" 
+                                    value={timerMin} 
+                                    onChange={(evt)=>{setTimerMin(evt.target.value);}}/>
+                        </label>
+                    </div>
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
         </Modal>
     )
 }
