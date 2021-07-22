@@ -4,6 +4,9 @@ import './Timer.css';
 import SettingsModal from './SettingsModal.js';
 import Modal from 'react-modal';
 
+import BEEP from './beep.mp3'
+import BELL from './bell.mp3'
+
 const MINIUTE = 60;
 
 function Timer(props) {
@@ -48,7 +51,7 @@ function Timer(props) {
 
             const refreshInterval = setInterval(() => {
                 if(curTime == 0) {
-                    // beep(clockIdx);
+                    beep();
                     //setOnBreak(!onBreak); // toggle break status
                     reset();
                     //if (onBreak) countDown(); // start break
@@ -59,12 +62,11 @@ function Timer(props) {
             }, 1000);
             return () => clearInterval(refreshInterval);
         }
-    }, [didStart, curTime])
+    }, [didStart, curTime]);
 
 
     function reset(doPause = false){
-        // Stop 'setInterval'
-        console.log("Resetting");
+        console.log(doPause ? "Pausing" : "Resetting");
         setDidStart(false);
     
         // resetting, not pause
@@ -72,6 +74,28 @@ function Timer(props) {
             setCurTime(-1);
         }
     } 
+
+    function beep() {
+        // console.log(props.bell);
+        let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
+        
+        //========== DEBUGGING ================
+        audio.volume = 0.1;
+        //=====================================
+
+        let playCnt = 1;
+        audio.addEventListener('ended', async function() {
+            playCnt++;
+            if(playCnt >= 1) return;
+            
+            await new Promise(r => setTimeout(r, 300)); // sleep
+            
+            this.currentTime = 0;
+            this.play();
+        }, false);
+        audio.play(); 
+    }
+
 
     // apply new settings from 'SettingsModal'
     function applySettings(num){
