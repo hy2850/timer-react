@@ -22,6 +22,7 @@ function Timer(props) {
     
     const [modalOpen, setModalOpen] = useState(false);
 
+
     //======================================================
     // Update clock
     useEffect(() => {
@@ -36,13 +37,24 @@ function Timer(props) {
         let min = Math.floor(time/MINIUTE); min = min.toString();
         let sec = time%MINIUTE; sec = sec.toString();
         setClock(min.padStart(2, '0') + ":" + sec.padStart(2, '0'));
-    }, [curTime])
+    }, [curTime]);
 
 
-    // init clock
+    // init clock & set keyboard keydown
     useEffect(() => {
         setCurTime(initTime.current);
-    }, [])
+
+        document.addEventListener('keydown', keydownEvents);
+        return ()=>document.removeEventListener('keydown', keydownEvents);
+    }, []);
+    
+    const keydownEvents = (evt)=>{
+        if(evt.code === 'Space')
+            setDidStart(didStart => !didStart);
+        else if (evt.code === 'KeyR')
+            reset();
+    };
+
 
     // countDown
     useEffect(() => {
@@ -73,7 +85,8 @@ function Timer(props) {
         if(!doPause) {
             setCurTime(-1);
         }
-    } 
+    }
+
 
     function beep() {
         // console.log(props.bell);
