@@ -11,11 +11,11 @@ const MINIUTE = 60;
 
 function Timer(props) {
     let initTime = useRef(props.timerTime); // 초기값 props.settingsObj.timerTime
-    let initBreak = 2; // 초기값 props.settingsObj.breakTime
+    let initBreak = useRef(props.breakTime); // 초기값 props.settingsObj.breakTime
 
     const [didStart, setDidStart] = useState(false);
     // const [onBreak, setOnBreak] = useState(false);
-    let onBreak = false;
+    let onBreak = useRef(false);
 
     const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
     const [clock, setClock] = useState("00:00");
@@ -32,7 +32,7 @@ function Timer(props) {
         // ===================================================
 
         let time = curTime;
-        if (time == -1) time = onBreak ? initBreak : initTime.current;
+        if (time == -1) time = onBreak.current ? onBreak.current : initTime.current;
 
         let min = Math.floor(time/MINIUTE); min = min.toString();
         let sec = time%MINIUTE; sec = sec.toString();
@@ -59,14 +59,14 @@ function Timer(props) {
     // countDown
     useEffect(() => {
         if(didStart){
-            if(curTime == -1) setCurTime(onBreak ? initBreak : initTime.current); // starting a new timer
+            if(curTime == -1) setCurTime(onBreak.current ? initBreak.current : initTime.current); // starting a new timer
 
             const refreshInterval = setInterval(() => {
                 if(curTime == 0) {
                     beep();
-                    //setOnBreak(!onBreak); // toggle break status
+                    onBreak.current = !onBreak.current; // toggle break status
                     reset();
-                    //if (onBreak) countDown(); // start break
+                    if (onBreak.current) setDidStart(true); // start break
                     // else (option.autostart) countDonw(clockIdx); // option : autostart (Inf Loop? Stack?)
                     return;
                 }

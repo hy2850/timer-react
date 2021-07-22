@@ -18,12 +18,14 @@ function App(props) {
 
       <Timer 
         type = "SHORT" 
-        timerTime = {3}> 
+        timerTime = {3}
+        breakTime = {2}> 
       </Timer>
       {toggleSecond ?
         <Timer 
           type = "LONG" 
-          timerTime = {5}> 
+          timerTime = {5}
+          breakTime = {2}> 
         </Timer>
         : null
       }
