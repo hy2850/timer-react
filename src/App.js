@@ -10,26 +10,27 @@ function App(props) {
   // add header
   // add timer
   return (
-    <div>
-      <div class="header">
-        <span class="title">Pomodoro Timer Plus+</span>
-        <button class="toggle-long" onClick = {()=>setToggleSecond(!toggleSecond)}>Long-Timer</button>
+    <>
+      <div className="header">
+        <span className="title">Pomodoro Timer Plus+</span>
+        <button className="toggle-long" onClick = {()=>setToggleSecond(!toggleSecond)}>Long-Timer</button>
       </div>
-
-      <Timer 
-        type = "SHORT" 
-        timerTime = {3}
-        breakTime = {2}> 
-      </Timer>
-      {toggleSecond ?
+      <div className = "wrapper">
         <Timer 
-          type = "LONG" 
-          timerTime = {5}
+          type = "SHORT" 
+          timerTime = {3}
           breakTime = {2}> 
         </Timer>
-        : null
-      }
-    </div>
+        {toggleSecond ?
+          <Timer 
+            type = "LONG" 
+            timerTime = {5}
+            breakTime = {2}> 
+          </Timer>
+          : null
+        }
+      </div>
+    </>
   );
 }
 
