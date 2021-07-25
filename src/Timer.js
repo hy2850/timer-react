@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import './Timer.css';
 
-import SettingsModal from './SettingsModal.js';
-import Modal from 'react-modal';
+import TimeSettingsModal from './TimeSettingsModal.js';
 
 import BEEP from './beep.mp3'
 import BELL from './bell.mp3'
@@ -11,10 +10,10 @@ const MINIUTE = 60;
 
 function Timer(props) {
     //let settings = useRef(props.settingsObj)
-    let initTime = useRef(props.timerTime); // 초기값 props.settingsObj.timerTime
-    let initBreak = useRef(props.breakTime); // 초기값 props.settingsObj.breakTime
-    let alarmVol = useRef(1); // 초기값 props.settingsObj.volume
-    let autoStart = useRef(false); // 초기값 props.settingsObj.autoStart
+    let initTime = useRef(props.genSettings.timerTime); // 초기값 props.settingsObj.timerTime
+    let initBreak = useRef(props.genSettings.breakTime); // 초기값 props.settingsObj.breakTime
+    let alarmVol = useRef(props.genSettings.volume); // 초기값 props.settingsObj.volume
+    let autoStart = useRef(props.genSettings.autoStart); // 초기값 props.settingsObj.autoStart
 
     const [didStart, setDidStart] = useState(false);
     // const [onBreak, setOnBreak] = useState(false);
@@ -33,7 +32,6 @@ function Timer(props) {
         // DEBUGGING
         // console.log(`Timer ${props.timer_type} : ${curTime}`);
         // ===================================================
-
         let time = curTime;
         if (time == -1) time = onBreak.current ? initBreak.current : initTime.current;
 
@@ -45,6 +43,7 @@ function Timer(props) {
 
     // init clock & set keyboard keydown
     useEffect(() => {
+        console.log("Timer Init) props : ", props.genSettings)
         setCurTime(initTime.current);
 
         document.addEventListener('keydown', keydownEvents);
@@ -113,14 +112,9 @@ function Timer(props) {
 
 
     // apply new settings from 'SettingsModal'
-    function applySettings(settingsObj){
-        console.log("Got settings! : ", settingsObj)
-        
-        initTime.current = settingsObj.timerTime;
-        initBreak.current = settingsObj.breakTime;
-        alarmVol.current = settingsObj.volume;
-        autoStart.current = settingsObj.autoStart;
-
+    function applyTimeSettings(timeObj){
+        initTime.current = timeObj.timerTime;
+        initBreak.current = timeObj.breakTime;
         reset();
         setCurTime(initTime.current);
     }
@@ -134,15 +128,15 @@ function Timer(props) {
                     <button className = "button" id="start" onClick = {()=>setDidStart(true)}> Start </button>
                     <button className = "button" id="pause" onClick = {()=>reset(true)}> Pause </button>
                     <button className = "button secondary" id="reset" onClick = {()=>reset()}> Reset </button>
-                    <button className = "button secondary" id="settings" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Settings </button>
+                    <button className = "button secondary" id="settings" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Time </button>
                 </div>
             </div>
 
-            <SettingsModal 
+            <TimeSettingsModal 
                 isOpen={modalOpen} 
                 close={()=>setModalOpen(false)} 
-                save={(num)=>applySettings(num)}>
-            </SettingsModal>
+                save={(timeObj)=>applyTimeSettings(timeObj)}>
+            </TimeSettingsModal>
         </>
     );
 }
