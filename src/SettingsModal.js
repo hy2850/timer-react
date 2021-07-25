@@ -25,7 +25,9 @@ export default function SettingsModal(props) {
     }, [autoStart]);
     //--------------------------------------------
 
-    function saveSettings(){
+    function saveSettings(evt){
+        evt.preventDefault();
+
         alert("Settings saved");
         const settingsObj = {
             timerTime: timerMin,

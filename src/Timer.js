@@ -10,8 +10,11 @@ import BELL from './bell.mp3'
 const MINIUTE = 60;
 
 function Timer(props) {
+    //let settings = useRef(props.settingsObj)
     let initTime = useRef(props.timerTime); // 초기값 props.settingsObj.timerTime
     let initBreak = useRef(props.breakTime); // 초기값 props.settingsObj.breakTime
+    let alarmVol = useRef(1); // 초기값 props.settingsObj.volume
+    let autoStart = useRef(false); // 초기값 props.settingsObj.autoStart
 
     const [didStart, setDidStart] = useState(false);
     // const [onBreak, setOnBreak] = useState(false);
@@ -32,7 +35,7 @@ function Timer(props) {
         // ===================================================
 
         let time = curTime;
-        if (time == -1) time = onBreak.current ? onBreak.current : initTime.current;
+        if (time == -1) time = onBreak.current ? initBreak.current : initTime.current;
 
         let min = Math.floor(time/MINIUTE); min = min.toString();
         let sec = time%MINIUTE; sec = sec.toString();
@@ -67,7 +70,7 @@ function Timer(props) {
                     onBreak.current = !onBreak.current; // toggle break status
                     reset();
                     if (onBreak.current) setDidStart(true); // start break
-                    // else (option.autostart) countDonw(clockIdx); // option : autostart (Inf Loop? Stack?)
+                    else if (autoStart.current) setDidStart(true); // option : autostart (Inf Loop? Stack?)
                     return;
                 }
                 setCurTime(curTime => curTime-1);        
@@ -83,6 +86,7 @@ function Timer(props) {
     
         // resetting, not pause
         if(!doPause) {
+            //onBreak.current = false;
             setCurTime(-1);
         }
     }
@@ -91,10 +95,8 @@ function Timer(props) {
     function beep() {
         // console.log(props.bell);
         let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
-        
-        //========== DEBUGGING ================
-        audio.volume = 0.1;
-        //=====================================
+
+        audio.volume = alarmVol.current; // option
 
         let playCnt = 1;
         audio.addEventListener('ended', async function() {
@@ -111,8 +113,14 @@ function Timer(props) {
 
 
     // apply new settings from 'SettingsModal'
-    function applySettings(num){
-        initTime.current = num;
+    function applySettings(settingsObj){
+        console.log("Got settings! : ", settingsObj)
+        
+        initTime.current = settingsObj.timerTime;
+        initBreak.current = settingsObj.breakTime;
+        alarmVol.current = settingsObj.volume;
+        autoStart.current = settingsObj.autoStart;
+
         reset();
         setCurTime(initTime.current);
     }
@@ -120,12 +128,13 @@ function Timer(props) {
     return (
         <>
             <div className = "timerBox" data-short>
+                <span id = "breakNotify">{onBreak.current ? "(on Break)" : " "}</span>
                 <p id = "timer">{clock}</p>
                 <div className = "buttonSet">
-                <button className = "button start" onClick = {()=>setDidStart(true)}> Start </button>
-                <button className = "button pause" onClick = {()=>reset(true)}> Pause </button>
-                <button className = "button reset secondary" onClick = {()=>reset()}> Reset </button>
-                <button className = "button settings secondary" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Settings </button>
+                    <button className = "button" id="start" onClick = {()=>setDidStart(true)}> Start </button>
+                    <button className = "button" id="pause" onClick = {()=>reset(true)}> Pause </button>
+                    <button className = "button secondary" id="reset" onClick = {()=>reset()}> Reset </button>
+                    <button className = "button secondary" id="settings" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Settings </button>
                 </div>
             </div>
 

@@ -23,6 +23,10 @@ p#timer {
   font-weight: bold;
 }
 
+#breakNotify {
+  font-size: 0.8rem;
+}
+
 /* Start, Pause, Reset, Settings buttons*/
 .buttonSet {
   display: flex;
