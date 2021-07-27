@@ -32,6 +32,7 @@ export default function GeneralSettingsModal(props) {
     return (
         <Modal 
             className="modal" 
+            id="general"
             closeTimeoutMS={200}
             isOpen={props.isOpen} 
             onRequestClose={props.close}>

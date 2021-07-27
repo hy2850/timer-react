@@ -128,7 +128,7 @@ function Timer(props) {
                     <button className = "button" id="start" onClick = {()=>setDidStart(true)}> Start </button>
                     <button className = "button" id="pause" onClick = {()=>reset(true)}> Pause </button>
                     <button className = "button secondary" id="reset" onClick = {()=>reset()}> Reset </button>
-                    <button className = "button secondary" id="settings" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Time </button>
+                    <button className = "button secondary" id="timeSettings" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Time </button>
                 </div>
             </div>
 

@@ -16,6 +16,18 @@
   max-width: 80%; */
 }
 
+/* Time modal size */
+.modal#time {
+  width: 400px;
+  height: 200px;
+  margin-top: -100px; /* Negative half of height. */
+  margin-left: -200px; /* Negative half of width. */
+}
+
+.modal#time .settings-container-time {
+  align-items: center;
+}
+
 /*==============================================*/
 /* Title and 'X' close button */
 .modal-header {

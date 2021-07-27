@@ -11,18 +11,30 @@
   font-weight: bold;
 }
 
-.header button.toggle-long {
+/* header buttons */
+.header .main-buttonSet {
+  display: flex;
+  width: 25%;
+}
+
+.header .main-buttonSet button {
+  width: 100px;
+  height: 40px;
+  padding: 0px;
+
   border: solid black 0.5px;
   background-color: #cccccbee;
   border-radius: 5px;
 
   color: black;
   font-weight: bold;
+  text-align: center;
 }
-.header button.toggle-long:hover {
+.header .main-buttonSet button:hover {
   background-color: rgb(182, 182, 182);
 }
 
+/* body for timers */
 .wrapper {
   display: flex;
   flex-direction: column;

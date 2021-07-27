@@ -27,9 +27,9 @@ function App(props) {
     <>
       <div className="header">
         <span className="title">Pomodoro Timer Plus+</span>
-        <div>
-          <button className="toggle-long" onClick = {()=>setToggleSecond(!toggleSecond)}>Long-Timer</button>
-          <button className="button secondary" id="settings" onClick = {()=>setModalOpen(true)}>Settings</button>
+        <div className="main-buttonSet">
+          <button onClick = {()=>setToggleSecond(!toggleSecond)}>Long-Timer</button>
+          <button onClick = {()=>setModalOpen(true)}>Settings</button>
         </div>
       </div>
       <div className = "wrapper">
