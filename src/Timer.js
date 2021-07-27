@@ -9,14 +9,12 @@ import BELL from './bell.mp3'
 const MINIUTE = 60;
 
 function Timer(props) {
-    //let settings = useRef(props.settingsObj)
     let initTime = useRef(props.settings.timerTime); // 초기값 props.settingsObj.timerTime
     let initBreak = useRef(props.settings.breakTime); // 초기값 props.settingsObj.breakTime
     let alarmVol = useRef(props.settings.volume); // 초기값 props.settingsObj.volume
     let autoStart = useRef(props.settings.autoStart); // 초기값 props.settingsObj.autoStart
 
     const [didStart, setDidStart] = useState(false);
-    // const [onBreak, setOnBreak] = useState(false);
     let onBreak = useRef(false);
 
     const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
@@ -28,12 +26,8 @@ function Timer(props) {
     //======================================================
     // Update clock
     useEffect(() => {
-        // ===================================================
-        // DEBUGGING
-        // console.log(`Timer ${props.timer_type} : ${curTime}`);
-        // ===================================================
         let time = curTime;
-        if (time == -1) time = onBreak.current ? initBreak.current : initTime.current;
+        if (time === -1) time = onBreak.current ? initBreak.current : initTime.current;
 
         let min = Math.floor(time/MINIUTE); min = min.toString();
         let sec = time%MINIUTE; sec = sec.toString();
@@ -49,7 +43,7 @@ function Timer(props) {
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
     }, []);
-    
+
     const keydownEvents = (evt)=>{
         if(evt.code === 'Space')
             setDidStart(didStart => !didStart);
@@ -118,6 +112,7 @@ function Timer(props) {
         reset();
         setCurTime(initTime.current);
         
+        // Update initTime and cache
         const key = 'initTimeSettings-json';
         let cachedTimeObj = JSON.parse(localStorage.getItem(key));
         if(props.type === "SHORT"){
@@ -132,6 +127,7 @@ function Timer(props) {
                 longBT : timeObj.breakTime
             });
         }
+        props.update_initTime(initTimeObj => Object.assign({}, initTimeObj, cachedTimeObj)); // also update 'initTimeObj' state in App.js
         window.localStorage.setItem(key, JSON.stringify(cachedTimeObj)); // cache time settings
     }
 

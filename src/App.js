@@ -13,12 +13,13 @@ function App(props) {
     longTT : 5,
     longBT: 3,
   }; // TT : Timer Time, BT : Break Time
-  let initTimeObj = useRef(INIT_TIME); // stores initial time settings for both timers
+  const [initTimeObj, setInitTimeObj] = useState(INIT_TIME); // stores initial time settings for both timers
 
 
   // =============================================================================
-  // Retrieve saved settings from localStorage
+  // [Cache] Retrieve saved settings from localStorage
   useEffect(()=>{
+    //localStorage.clear();
     let generalCache = localStorage.getItem('generalSettings-json')
     if (generalCache){
       setSettingsObj(JSON.parse(generalCache));
@@ -26,14 +27,13 @@ function App(props) {
 
     let timeCache = localStorage.getItem('initTimeSettings-json')
     if (timeCache){
-      console.log(JSON.parse(timeCache));
-      initTimeObj.current = Object.assign(initTimeObj.current, JSON.parse(timeCache));
+      setInitTimeObj(initTimeObj => Object.assign({}, initTimeObj, JSON.parse(timeCache)));
     }
   }, []);
 
-  
+
   // =============================================================================
-  // General settings
+  // General settings - for both timers : volume, autostart, ...
   const [genSettingsObj, setSettingsObj] = useState({
     volume: 1,
     autoStart: false
@@ -41,10 +41,9 @@ function App(props) {
   const [key, setKey] = useState(0);
 
   useEffect(()=>{
-    //console.log("updated settingsObj : ", genSettingsObj);
     setKey(key=>key+1); // re-render Timer components by changing the key
     localStorage.setItem('generalSettings-json', JSON.stringify(genSettingsObj)); // cache general settings
-  }, [genSettingsObj])
+  }, [genSettingsObj]);
 
   function applySettings(settingsObj){
     //console.log("--Applying general settings - expecting re-rendering--")
@@ -66,8 +65,8 @@ function App(props) {
           key = {key}
           type = "SHORT" 
           settings = {Object.assign({}, genSettingsObj, 
-            {timerTime:initTimeObj.current.shortTT, 
-            breakTime:initTimeObj.current.shortBT})}
+                                        {timerTime:initTimeObj.shortTT, breakTime:initTimeObj.shortBT})}
+          update_initTime = {setInitTimeObj}
         >
         </Timer>
         {toggleSecond ?
@@ -75,8 +74,8 @@ function App(props) {
             key = {key + 2} // if set to key + 1, React confuses short timer with long timer whenever key is incremented
             type = "LONG" 
             settings = {Object.assign({}, genSettingsObj, 
-              {timerTime:initTimeObj.current.longTT, 
-              breakTime:initTimeObj.current.longBT})}
+                                          {timerTime:initTimeObj.longTT, breakTime:initTimeObj.longBT})}
+            update_initTime = {setInitTimeObj}
           >
           </Timer>
           : null
@@ -94,9 +93,3 @@ function App(props) {
 }
 
 export default App;
-
-/*
-<Timer timer_type = "SHORT"></Timer>
-      <Timer timer_type = "LONG"></Timer>
-      <settingsModal/>
-*/

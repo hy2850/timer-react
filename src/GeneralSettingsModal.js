@@ -7,15 +7,6 @@ Modal.setAppElement('#root');
 export default function GeneralSettingsModal(props) {
     const [vol, setVol] = useState(1);
     const [autoStart, setAutoStart] = useState(false);
-    
-    // //----------------DEBUG-----------------------
-    // useEffect(()=>{
-    //     console.log(vol);
-    // }, [vol]);
-    // useEffect(()=>{
-    //     console.log(autoStart);
-    // }, [autoStart]);
-    // //--------------------------------------------
 
     // set keyboard keydown
     useEffect(() => {

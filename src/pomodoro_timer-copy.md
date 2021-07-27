@@ -16,11 +16,12 @@ These To-do's are sorted in the order of completion
 - [x] <span style="color:blue">[17June21]</span> Toggle 'start' or create 'pause' button to pause the timer
 - [x] <span style="color:blue">[17June21]</span> Keyboard input (space) to toggle start/pause
 - [x] <span style="color:blue">[27June21]</span> Keyboard input ('R') to reset
+  - [ ] 'RR' to revert to the original timer from break-timer
 - [x] <span style="color:blue">[28June21]</span> Different bell for long-timer and fade-out
 - [x] <span style="color:blue">[28June21]</span>Design (Buttons, clock, ...) </br>
   - Different color theme for Night mode?
 - [x] <span style="color:blue">[31June21]</span> Short Break (1st clock), Long break (2nd clock)
-  - [ ] Also give user option to set break time?)
+  - [x] <span style="color:blue">[27July21'R]</span>Also give user option to set break time?)
 - [ ] Night mode (white -> black, black -> white) -> use inbuilt dark mode
 
 Limited to two timers (further work : react componentize to create more than two timers)
@@ -38,9 +39,9 @@ countDown 재활용해서 break 모드 만들기
 
 - [x] <span style="color:blue">[25July21'R']</span> Auto-start after each cycle ends
 - [x] <span style="color:blue">[25July21'R']</span> Option to adjust volume of timer sound
+- [x] <span style="color:blue">[25July21'R']</span> Create general settings for both clock
 - [ ] Option in 'Settings', to reset the settings
 - [ ] Change time by clicking and re-writing clock itself
-- [ ] Create general settings for both clock
 
 </br>
 
@@ -49,6 +50,11 @@ countDown 재활용해서 break 모드 만들기
 - [x] Settings) For multiple timer components, need different setting for each component
 
 - [x] Settings) Time setting change is not applied while the timer is already on.
+
+- [x] General Settings) Time setting not reflected to initTimeObj right away - setting goes away once App.js is re-rendered
+      → <span style="color:blue">[25July21'R']</span> Changed 'initTimeObj' to state from ref, passed set function to Timer.js to update initTimeObj right away
+
+- [] Changing time setting in break mode, causes break mode to have the timer Time
 
 </br>
 
