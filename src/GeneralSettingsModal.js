@@ -8,21 +8,21 @@ export default function GeneralSettingsModal(props) {
     const [vol, setVol] = useState(1);
     const [autoStart, setAutoStart] = useState(false);
     
-    //----------------DEBUG-----------------------
-    useEffect(()=>{
-        console.log(vol);
-    }, [vol]);
-    useEffect(()=>{
-        console.log(autoStart);
-    }, [autoStart]);
-    //--------------------------------------------
+    // //----------------DEBUG-----------------------
+    // useEffect(()=>{
+    //     console.log(vol);
+    // }, [vol]);
+    // useEffect(()=>{
+    //     console.log(autoStart);
+    // }, [autoStart]);
+    // //--------------------------------------------
 
     function saveSettings(evt){
         evt.preventDefault();
 
         alert("Settings saved");
         const settingsObj = {
-            volume: vol,
+            volume: Number.parseFloat(vol),
             autoStart: autoStart,
         }
         props.save(settingsObj);

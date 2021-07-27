@@ -10,10 +10,10 @@ const MINIUTE = 60;
 
 function Timer(props) {
     //let settings = useRef(props.settingsObj)
-    let initTime = useRef(props.genSettings.timerTime); // 초기값 props.settingsObj.timerTime
-    let initBreak = useRef(props.genSettings.breakTime); // 초기값 props.settingsObj.breakTime
-    let alarmVol = useRef(props.genSettings.volume); // 초기값 props.settingsObj.volume
-    let autoStart = useRef(props.genSettings.autoStart); // 초기값 props.settingsObj.autoStart
+    let initTime = useRef(props.settings.timerTime); // 초기값 props.settingsObj.timerTime
+    let initBreak = useRef(props.settings.breakTime); // 초기값 props.settingsObj.breakTime
+    let alarmVol = useRef(props.settings.volume); // 초기값 props.settingsObj.volume
+    let autoStart = useRef(props.settings.autoStart); // 초기값 props.settingsObj.autoStart
 
     const [didStart, setDidStart] = useState(false);
     // const [onBreak, setOnBreak] = useState(false);
@@ -43,7 +43,7 @@ function Timer(props) {
 
     // init clock & set keyboard keydown
     useEffect(() => {
-        console.log("Timer Init) props : ", props.genSettings)
+        //console.log("Timer Init) props : ", props.genSettings)
         setCurTime(initTime.current);
 
         document.addEventListener('keydown', keydownEvents);
@@ -117,6 +117,22 @@ function Timer(props) {
         initBreak.current = timeObj.breakTime;
         reset();
         setCurTime(initTime.current);
+        
+        const key = 'initTimeSettings-json';
+        let cachedTimeObj = JSON.parse(localStorage.getItem(key));
+        if(props.type === "SHORT"){
+            cachedTimeObj = Object.assign({}, cachedTimeObj, {
+                shortTT : timeObj.timerTime,
+                shortBT : timeObj.breakTime
+            });
+        }
+        else{
+            cachedTimeObj = Object.assign({}, cachedTimeObj, {
+                longTT : timeObj.timerTime,
+                longBT : timeObj.breakTime
+            });
+        }
+        window.localStorage.setItem(key, JSON.stringify(cachedTimeObj)); // cache time settings
     }
 
     return (
