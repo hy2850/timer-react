@@ -1,102 +1,154 @@
 import React, {useState, useEffect, useRef} from 'react';
 import './Timer.css';
 
-import SettingsModal from './SettingsModal.js';
-import Modal from 'react-modal';
+import TimeSettingsModal from './TimeSettingsModal.js';
+
+import BEEP from './beep.mp3'
+import BELL from './bell.mp3'
 
 const MINIUTE = 60;
 
 function Timer(props) {
-    let initTime = useRef(props.timerTime); // 초기값 props.settingsObj.timerTime
-    let initBreak = 2; // 초기값 props.settingsObj.breakTime
+    let initTime = useRef(props.settings.timerTime); // 초기값 props.settingsObj.timerTime
+    let initBreak = useRef(props.settings.breakTime); // 초기값 props.settingsObj.breakTime
+    let alarmVol = useRef(props.settings.volume); // 초기값 props.settingsObj.volume
+    let autoStart = useRef(props.settings.autoStart); // 초기값 props.settingsObj.autoStart
 
     const [didStart, setDidStart] = useState(false);
-    // const [onBreak, setOnBreak] = useState(false);
-    let onBreak = false;
+    let onBreak = useRef(false);
 
     const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
     const [clock, setClock] = useState("00:00");
     
     const [modalOpen, setModalOpen] = useState(false);
 
+
     //======================================================
     // Update clock
     useEffect(() => {
-        // ===================================================
-        // DEBUGGING
-        // console.log(`Timer ${props.timer_type} : ${curTime}`);
-        // ===================================================
-
         let time = curTime;
-        if (time == -1) time = onBreak ? initBreak : initTime.current;
+        if (time === -1) time = onBreak.current ? initBreak.current : initTime.current;
 
         let min = Math.floor(time/MINIUTE); min = min.toString();
         let sec = time%MINIUTE; sec = sec.toString();
         setClock(min.padStart(2, '0') + ":" + sec.padStart(2, '0'));
-    }, [curTime])
+    }, [curTime]);
 
 
-    // init clock
+    // init clock & set keyboard keydown
     useEffect(() => {
+        //console.log("Timer Init) props : ", props.genSettings)
         setCurTime(initTime.current);
-    }, [])
+
+        document.addEventListener('keydown', keydownEvents);
+        return ()=>document.removeEventListener('keydown', keydownEvents);
+    }, []);
+
+    const keydownEvents = (evt)=>{
+        if(evt.code === 'Space')
+            setDidStart(didStart => !didStart);
+        else if (evt.code === 'KeyR')
+            reset();
+    };
+
 
     // countDown
     useEffect(() => {
         if(didStart){
-            if(curTime == -1) setCurTime(onBreak ? initBreak : initTime.current); // starting a new timer
+            if(curTime == -1) setCurTime(onBreak.current ? initBreak.current : initTime.current); // starting a new timer
 
             const refreshInterval = setInterval(() => {
                 if(curTime == 0) {
-                    // beep(clockIdx);
-                    //setOnBreak(!onBreak); // toggle break status
+                    beep();
+                    onBreak.current = !onBreak.current; // toggle break status
                     reset();
-                    //if (onBreak) countDown(); // start break
-                    // else (option.autostart) countDonw(clockIdx); // option : autostart (Inf Loop? Stack?)
+                    if (onBreak.current) setDidStart(true); // start break
+                    else if (autoStart.current) setDidStart(true); // option : autostart (Inf Loop? Stack?)
                     return;
                 }
                 setCurTime(curTime => curTime-1);        
             }, 1000);
             return () => clearInterval(refreshInterval);
         }
-    }, [didStart, curTime])
+    }, [didStart, curTime]);
 
 
     function reset(doPause = false){
-        // Stop 'setInterval'
-        console.log("Resetting");
+        console.log(doPause ? "Pausing" : "Resetting");
         setDidStart(false);
     
         // resetting, not pause
         if(!doPause) {
+            //onBreak.current = false;
             setCurTime(-1);
         }
-    } 
+    }
+
+
+    function beep() {
+        // console.log(props.bell);
+        let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
+
+        audio.volume = alarmVol.current; // option
+
+        let playCnt = 1;
+        audio.addEventListener('ended', async function() {
+            playCnt++;
+            if(playCnt >= 1) return;
+            
+            await new Promise(r => setTimeout(r, 300)); // sleep
+            
+            this.currentTime = 0;
+            this.play();
+        }, false);
+        audio.play(); 
+    }
+
 
     // apply new settings from 'SettingsModal'
-    function applySettings(num){
-        initTime.current = num;
+    function applyTimeSettings(timeObj){
+        initTime.current = timeObj.timerTime;
+        initBreak.current = timeObj.breakTime;
         reset();
         setCurTime(initTime.current);
+        
+        // Update initTime and cache
+        const key = 'initTimeSettings-json';
+        let cachedTimeObj = JSON.parse(localStorage.getItem(key));
+        if(props.type === "SHORT"){
+            cachedTimeObj = Object.assign({}, cachedTimeObj, {
+                shortTT : timeObj.timerTime,
+                shortBT : timeObj.breakTime
+            });
+        }
+        else{
+            cachedTimeObj = Object.assign({}, cachedTimeObj, {
+                longTT : timeObj.timerTime,
+                longBT : timeObj.breakTime
+            });
+        }
+        props.update_initTime(initTimeObj => Object.assign({}, initTimeObj, cachedTimeObj)); // also update 'initTimeObj' state in App.js
+        window.localStorage.setItem(key, JSON.stringify(cachedTimeObj)); // cache time settings
     }
 
     return (
         <>
             <div className = "timerBox" data-short>
+                <span id = "breakNotify">{onBreak.current ? "(on Break)" : " "}</span>
                 <p id = "timer">{clock}</p>
                 <div className = "buttonSet">
-                <button className = "button start" onClick = {()=>setDidStart(true)}> Start </button>
-                <button className = "button pause" onClick = {()=>reset(true)}> Pause </button>
-                <button className = "button reset secondary" onClick = {()=>reset()}> Reset </button>
-                <button className = "button settings secondary" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Settings </button>
+                    <button className = "button" id="start" onClick = {()=>setDidStart(true)}> Start </button>
+                    <button className = "button" id="pause" onClick = {()=>reset(true)}> Pause </button>
+                    <button className = "button secondary" id="reset" onClick = {()=>reset()}> Reset </button>
+                    <button className = "button secondary" id="timeSettings" data-modal-target = "SHORT" onClick = {()=>setModalOpen(true)}> Time </button>
                 </div>
             </div>
 
-            <SettingsModal 
+            <TimeSettingsModal 
                 isOpen={modalOpen} 
                 close={()=>setModalOpen(false)} 
-                save={(num)=>applySettings(num)}>
-            </SettingsModal>
+                save={(timeObj)=>applyTimeSettings(timeObj)}>
+            </TimeSettingsModal>
         </>
     );
 }

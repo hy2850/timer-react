@@ -1,0 +1,119 @@
+.modal {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  width: 500px;
+  height: 300px;
+  margin-top: -150px; /* Negative half of height. */
+  margin-left: -250px; /* Negative half of width. */
+
+  border: 1px solid black;
+  border-radius: 5px;
+  /* z-index: 10; */
+
+  background-color: white;
+  /* width: 25%;
+  max-width: 80%; */
+}
+
+/* Time modal size */
+.modal#time {
+  width: 400px;
+  height: 200px;
+  margin-top: -100px; /* Negative half of height. */
+  margin-left: -200px; /* Negative half of width. */
+}
+
+.modal#time .settings-container-time {
+  align-items: center;
+}
+
+/*==============================================*/
+/* Title and 'X' close button */
+.modal-header {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+
+.modal-header .title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.modal-header .close-button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/*==============================================*/
+/* Setting options and save button */
+.modal-body {
+  margin: 10px 0px 10px 5px;
+}
+
+/* setting options */
+.settings {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 5px 15px;
+}
+
+.settings-container-time {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.settings-container-time input#time {
+  width: 50px;
+  height: 30px;
+  font-size: medium;
+}
+
+/* slider */
+.slider {
+  width: 90%;
+}
+
+/* save button */
+.modal-body input.settings-save {
+  background-color: white;
+  border: 1px solid #c3c3c3;
+  color: #1d1d1d;
+  border: 0.1px solid;
+  border-radius: 5px;
+
+  margin-left: 5px;
+
+  width: 80px;
+  height: 30px;
+  cursor: pointer;
+}
+.modal-body input.settings-save:hover {
+  background-color: rgb(209, 209, 209);
+}
+
+/*==============================================*/
+/* Overlay when modal window is open */
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: 200ms ease-in-out;
+  /* transform: translateX(-100px); */
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  /* transform: translateX(0px); */
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+  /* transform: translateX(-100px); */
+}
