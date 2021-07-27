@@ -17,8 +17,21 @@ export default function GeneralSettingsModal(props) {
     // }, [autoStart]);
     // //--------------------------------------------
 
-    function saveSettings(evt){
-        evt.preventDefault();
+    // set keyboard keydown
+    useEffect(() => {
+        document.addEventListener('keydown', keydownEvents);
+        return ()=>document.removeEventListener('keydown', keydownEvents);
+    }, [props.isOpen]);
+    
+    const keydownEvents = (evt)=>{
+        if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')) // only when the modal is opened
+            saveSettings();
+    };
+    
+
+
+    function saveSettings(evt=null){
+        if(evt) evt.preventDefault();
 
         alert("Settings saved");
         const settingsObj = {

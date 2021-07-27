@@ -17,8 +17,20 @@ export default function TimeSettingsModal(props) {
     // }, [breakMin]);
     // //--------------------------------------------
 
+    // set keyboard keydown
+    useEffect(() => {
+        document.addEventListener('keydown', keydownEvents);
+        return ()=>document.removeEventListener('keydown', keydownEvents);
+    }, [props.isOpen]);
+    
+    const keydownEvents = (evt)=>{
+        if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')) // only when the modal is opened
+            saveSettings();
+    };
+
+
     function saveSettings(evt){
-        evt.preventDefault();
+        if(evt) evt.preventDefault();
 
         const timeObj = {
             timerTime: Number.parseInt(timerMin),
