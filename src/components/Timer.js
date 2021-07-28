@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useRef} from 'react';
-import './Timer.css';
+import '../styles/Timer.css';
 
 import TimeSettingsModal from './TimeSettingsModal.js';
 
-import BEEP from './beep.mp3'
-import BELL from './bell.mp3'
+import BEEP from '../sound/beep.mp3'
+import BELL from '../sound/bell.mp3'
 
 const MINIUTE = 60;
 

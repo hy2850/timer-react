@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import './SettingsModal.css';
+import '../styles/SettingsModal.css';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');

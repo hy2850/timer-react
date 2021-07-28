@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import './App.css';
+import '../styles/App.css';
 import Timer from './Timer';
 import GeneralSettingsModal from './GeneralSettingsModal.js';
 
