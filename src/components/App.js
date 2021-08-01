@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import '../styles/App.css';
 import Timer from './Timer';
 import GeneralSettingsModal from './GeneralSettingsModal.js';
@@ -7,6 +7,7 @@ function App(props) {
   const [toggleSecond, setToggleSecond] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
+  // Default initTime
   const INIT_TIME = {
     shortTT : 3,
     shortBT: 2,
@@ -45,10 +46,12 @@ function App(props) {
     localStorage.setItem('generalSettings-json', JSON.stringify(genSettingsObj)); // cache general settings
   }, [genSettingsObj]);
 
+  // Called when general settings modal closes
   function applySettings(settingsObj){
     //console.log("--Applying general settings - expecting re-rendering--")
     setSettingsObj(settingsObj)
   }
+
 
   return (
     <>
@@ -59,6 +62,7 @@ function App(props) {
           <button onClick = {()=>setModalOpen(true)}>Settings</button>
           <button onClick = {()=>{localStorage.clear(); alert("cleared!")}}>Reset Cache</button>
         </div>
+
       </div>
       <div className = "wrapper">
         <Timer 
@@ -83,6 +87,7 @@ function App(props) {
       </div>
 
       <GeneralSettingsModal
+        id="modalTest"
         isOpen={modalOpen} 
         close={()=>setModalOpen(false)} 
         save={(num)=>applySettings(num)}

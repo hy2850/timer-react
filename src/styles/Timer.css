@@ -18,11 +18,6 @@
   width: 40%;
 }
 
-p#timer {
-  font-size: 3.5rem;
-  font-weight: bold;
-}
-
 #breakNotify {
   font-size: 0.8rem;
 }
@@ -79,4 +74,16 @@ p#timer {
 }
 .timerBox[data-long].active {
   transform: scale(1);
+}
+
+/* Writable Clock */
+#timer {
+  font-size: 3.5rem;
+  font-weight: bold;
+}
+
+#timer input {
+  font-size: 3.5rem;
+  width: 2ch;
+  height: 2ch;
 }

@@ -1,5 +1,6 @@
 Main pomodoro timer is incorporated with the break timer.
-Custom time setting available by opening 'Settings' on each timer
+Custom time setting available by opening 'Settings' on each timer.
+[1Aug21 Update] Double-click the clock to change main/break timer
 
 Can open another timer, with same features
 

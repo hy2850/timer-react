@@ -149,7 +149,7 @@ function Timer(props) {
         <>
             <div className = "timerBox" data-short>
                 <span id = "breakNotify">{onBreak.current ? "(on Break)" : " "}</span>
-                
+                <br/>
                 <p>
                     <WritableClock
                         key={key}
@@ -158,7 +158,7 @@ function Timer(props) {
                         update={(time)=>updateFromClock(time)}
                     ></WritableClock>
                 </p>
-
+                <br/>
                 <div className = "buttonSet">
                     <button className = "button" id="start" onClick = {()=>setDidStart(true)}> Start </button>
                     <button className = "button" id="pause" onClick = {()=>reset(true)}> Pause </button>

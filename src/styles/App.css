@@ -1,9 +1,14 @@
+body {
+  margin: 0;
+}
+
 .header {
+  width: 100%;
   display: flex;
   justify-content: space-around;
   padding: 20px;
-  border-bottom: solid gray 1px;
-  background-color: whitesmoke;
+  border-bottom: solid hsl(0, 0%, 90%) 1px;
+  background-color: hsl(0, 0%, 95%);
 }
 
 .header .title {
