@@ -10,6 +10,8 @@ export default function TimeSettingsModal(props) {
 
     // set keyboard keydown
     useEffect(() => {
+        if(!props.isOpen) return; // disable keydown when closed
+
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
     }, [props.isOpen]);
