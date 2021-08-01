@@ -106,7 +106,7 @@ function Timer(props) {
         initTime.current = timeObj.timerTime;
         initBreak.current = timeObj.breakTime;
         reset();
-        setCurTime(initTime.current);
+        setCurTime(onBreak.current ? initBreak.current : initTime.current);
         
         // Update initTime and cache
         const key = 'initTimeSettings-json';

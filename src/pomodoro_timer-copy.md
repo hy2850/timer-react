@@ -40,8 +40,8 @@ countDown 재활용해서 break 모드 만들기
 - [x] <span style="color:blue">[25July21'R']</span> Auto-start after each cycle ends
 - [x] <span style="color:blue">[25July21'R']</span> Option to adjust volume of timer sound
 - [x] <span style="color:blue">[25July21'R']</span> Create general settings for both clock
+- [x] <span style="color:blue">[1Aug21'R']</span>Change time by clicking and re-writing clock itself
 - [ ] Option in 'Settings', to reset the settings
-- [ ] Change time by clicking and re-writing clock itself
 
 </br>
 
@@ -54,9 +54,9 @@ countDown 재활용해서 break 모드 만들기
 - [x] General Settings) Time setting not reflected to initTimeObj right away - setting goes away once App.js is re-rendered
       → <span style="color:blue">[25July21'R']</span> Changed 'initTimeObj' to state from ref, passed set function to Timer.js to update initTimeObj right away
 
-- [] Changing time setting in break mode, causes break mode to have the timer Time
-
-</br>
+- [x] Changing time setting in break mode, causes break mode to have the timer Time
+      → <span style="color:blue">[1Aug21'R']</span> Fixed argument for 'setCurTime' in 'applyTimeSettings'
+      </br>
 
 ###**Further works**
 
