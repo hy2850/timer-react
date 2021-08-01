@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import '../styles/Timer.css';
 
 import TimeSettingsModal from './TimeSettingsModal.js';
+import WritableClock from './WritableClock';
 
 import BEEP from '../sound/beep.mp3'
 import BELL from '../sound/bell.mp3'
@@ -9,35 +10,32 @@ import BELL from '../sound/bell.mp3'
 const MINIUTE = 60;
 
 function Timer(props) {
+    // Options - preserve with useRef 
     let initTime = useRef(props.settings.timerTime); // 초기값 props.settingsObj.timerTime
     let initBreak = useRef(props.settings.breakTime); // 초기값 props.settingsObj.breakTime
     let alarmVol = useRef(props.settings.volume); // 초기값 props.settingsObj.volume
     let autoStart = useRef(props.settings.autoStart); // 초기값 props.settingsObj.autoStart
 
+    // States for timer
+    const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
     const [didStart, setDidStart] = useState(false);
     let onBreak = useRef(false);
 
-    const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
-    const [clock, setClock] = useState("00:00");
-    
+    // Etc
     const [modalOpen, setModalOpen] = useState(false);
+    const [key, setKey] = useState(0); // to re-render child component writableClock.js
 
-
+    
     //======================================================
     // Update clock
     useEffect(() => {
-        let time = curTime;
-        if (time === -1) time = onBreak.current ? initBreak.current : initTime.current;
-
-        let min = Math.floor(time/MINIUTE); min = min.toString();
-        let sec = time%MINIUTE; sec = sec.toString();
-        setClock(min.padStart(2, '0') + ":" + sec.padStart(2, '0'));
+        if(curTime == -1) setCurTime(onBreak.current ? initBreak.current : initTime.current); // starting a new timer
+        setKey(key => key + 1); // re-render writableClock
     }, [curTime]);
 
 
     // init clock & set keyboard keydown
     useEffect(() => {
-        //console.log("Timer Init) props : ", props.genSettings)
         setCurTime(initTime.current);
 
         document.addEventListener('keydown', keydownEvents);
@@ -52,13 +50,12 @@ function Timer(props) {
     };
 
 
+    // =============================================================================
     // countDown
     useEffect(() => {
         if(didStart){
-            if(curTime == -1) setCurTime(onBreak.current ? initBreak.current : initTime.current); // starting a new timer
-
             const refreshInterval = setInterval(() => {
-                if(curTime == 0) {
+                if(curTime === 0) {
                     beep();
                     onBreak.current = !onBreak.current; // toggle break status
                     reset();
@@ -79,14 +76,13 @@ function Timer(props) {
     
         // resetting, not pause
         if(!doPause) {
-            //onBreak.current = false;
+            //if(onBreak.current) onBreak.current = false; // messes-up break mode
             setCurTime(-1);
         }
     }
 
 
     function beep() {
-        // console.log(props.bell);
         let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
 
         audio.volume = alarmVol.current; // option
@@ -104,7 +100,7 @@ function Timer(props) {
         audio.play(); 
     }
 
-
+    // =============================================================================
     // apply new settings from 'SettingsModal'
     function applyTimeSettings(timeObj){
         initTime.current = timeObj.timerTime;
@@ -131,11 +127,38 @@ function Timer(props) {
         window.localStorage.setItem(key, JSON.stringify(cachedTimeObj)); // cache time settings
     }
 
+    // Apply updates from writableClock (initTime setting and localStorage cache)
+    // Can only update timerTime or breakTime at a time (depends on 'onBreak' flag)
+    function updateFromClock(time){
+        let timeObj = {
+            timerTime : initTime.current,
+            breakTime : initBreak.current
+        }
+        if(onBreak.current){
+            Object.assign(timeObj, {breakTime : time});
+        }
+        else{
+            Object.assign(timeObj, {timerTime : time});
+        }
+
+        applyTimeSettings(timeObj);
+    }
+
+
     return (
         <>
             <div className = "timerBox" data-short>
                 <span id = "breakNotify">{onBreak.current ? "(on Break)" : " "}</span>
-                <p id = "timer">{clock}</p>
+                
+                <p>
+                    <WritableClock
+                        key={key}
+                        time={curTime}   
+                        pause={()=>reset(true)} // pause
+                        update={(time)=>updateFromClock(time)}
+                    ></WritableClock>
+                </p>
+
                 <div className = "buttonSet">
                     <button className = "button" id="start" onClick = {()=>setDidStart(true)}> Start </button>
                     <button className = "button" id="pause" onClick = {()=>reset(true)}> Pause </button>
