@@ -54,6 +54,15 @@ function App(props) {
   }
 
 
+  // =============================================================================
+  // Reset
+  function resetAllSettings(){
+    localStorage.clear(); 
+    alert("Cleared!");
+    document.location.reload(); // reload webpage
+  }
+
+
   return (
     <>
       <div className="header">
@@ -61,7 +70,7 @@ function App(props) {
         <div className="main-buttonSet">
           <button onClick = {()=>setToggleSecond(!toggleSecond)}>Long-Timer</button>
           <button onClick = {()=>setModalOpen(true)}>Settings</button>
-          <button onClick = {()=>{localStorage.clear(); alert("cleared!")}}>Reset Cache</button>
+          <button onClick = {()=>resetAllSettings()}>Reset Settings</button>
         </div>
 
       </div>
