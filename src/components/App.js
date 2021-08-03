@@ -8,11 +8,12 @@ function App(props) {
   const [modalOpen, setModalOpen] = useState(false);
 
   // Default initTime
+  const MINIUTE = 60;
   const INIT_TIME = {
-    shortTT : 3,
-    shortBT: 2,
-    longTT : 5,
-    longBT: 3,
+    shortTT : 25 * MINIUTE,
+    shortBT: 5 * MINIUTE,
+    longTT : 50 * MINIUTE,
+    longBT: 10 * MINIUTE,
   }; // TT : Timer Time, BT : Break Time
   const [initTimeObj, setInitTimeObj] = useState(INIT_TIME); // stores initial time settings for both timers
 

@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 export default function TimeSettingsModal(props) {
+    const MINUTE = 60;
     const [timerMin, setTimerMin] = useState(25);
     const [breakMin, setBreakMin] = useState(5);
 
@@ -26,8 +27,8 @@ export default function TimeSettingsModal(props) {
         if(evt) evt.preventDefault();
 
         const timeObj = {
-            timerTime: Number.parseInt(timerMin),
-            breakTime: Number.parseInt(breakMin)
+            timerTime: Number.parseInt(timerMin) * MINUTE,
+            breakTime: Number.parseInt(breakMin) * MINUTE
         }
         props.save(timeObj);
         props.close();
