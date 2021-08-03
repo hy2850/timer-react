@@ -45,8 +45,13 @@ function Timer(props) {
     const keydownEvents = (evt)=>{
         if(evt.code === 'Space')
             setDidStart(didStart => !didStart);
-        else if (evt.code === 'KeyR')
+        else if (evt.code === 'KeyR'){
+            if(evt.ctrlKey){
+                evt.preventDefault(); // remove 'Ctrl+R' reload page
+                onBreak.current = false; // total reset (back to main timer)
+            }
             reset();
+        }
     };
 
 

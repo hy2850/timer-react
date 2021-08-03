@@ -17,11 +17,11 @@ export default function GeneralSettingsModal(props) {
     }, [props.isOpen]);
     
     const keydownEvents = (evt)=>{
-        if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')) // only when the modal is opened
+        if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')){ // only when the modal is opened
+            evt.preventDefault();
             saveSettings();
+        }
     };
-    
-
 
     function saveSettings(evt=null){
         if(evt) evt.preventDefault();
