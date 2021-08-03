@@ -60,7 +60,6 @@ export default function TimeSettingsModal(props) {
                                 </label>
                             </div>
                         </div>
-                        <br/><br/>
                         <input className="settings-save" type="submit" value="Submit" />
                     </form>
                 </div>

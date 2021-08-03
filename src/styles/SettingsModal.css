@@ -3,7 +3,7 @@
   top: 40%;
   left: 50%;
   width: 500px;
-  height: 300px;
+  height: 230px;
   margin-top: -150px; /* Negative half of height. */
   margin-left: -250px; /* Negative half of width. */
 
@@ -18,10 +18,10 @@
 
 /* Time modal size */
 .modal#time {
-  width: 400px;
-  height: 200px;
-  margin-top: -100px; /* Negative half of height. */
-  margin-left: -200px; /* Negative half of width. */
+  width: 250px;
+  height: 150px;
+  margin-top: -75px; /* Negative half of height. */
+  margin-left: -125px; /* Negative half of width. */
 }
 
 .modal#time .settings-container-time {
@@ -65,10 +65,16 @@
   padding: 0px 5px 15px;
 }
 
+/* TimeSettingsModal */
+.modal#time form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .settings-container-time {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
 }
 
 .settings-container-time input#time {
