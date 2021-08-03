@@ -6,8 +6,8 @@ Modal.setAppElement('#root');
 
 export default function TimeSettingsModal(props) {
     const MINUTE = 60;
-    const [timerMin, setTimerMin] = useState(25);
-    const [breakMin, setBreakMin] = useState(5);
+    const [timerMin, setTimerMin] = useState(props.type === "SHORT" ? 25 : 50);
+    const [breakMin, setBreakMin] = useState(props.type === "SHORT" ? 5 : 10);
 
     // set keyboard keydown
     useEffect(() => {

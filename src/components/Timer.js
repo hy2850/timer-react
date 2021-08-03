@@ -168,6 +168,7 @@ function Timer(props) {
             </div>
 
             <TimeSettingsModal 
+                type={props.type}
                 isOpen={modalOpen} 
                 close={()=>setModalOpen(false)} 
                 save={(timeObj)=>applyTimeSettings(timeObj)}>

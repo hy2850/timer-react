@@ -88,6 +88,7 @@ function App(props) {
       </div>
 
       <GeneralSettingsModal
+        curSettings={genSettingsObj}
         id="modalTest"
         isOpen={modalOpen} 
         close={()=>setModalOpen(false)} 
