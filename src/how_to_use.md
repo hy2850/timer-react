@@ -1,11 +1,16 @@
 Main pomodoro timer is incorporated with the break timer.
+
 Custom time setting available by opening 'Settings' on each timer.
-[1Aug21 Update] Double-click the clock to change main/break timer
+[1Aug21 Update] Double-click the clock to manually change main/break timer
 
-Can open another timer, with same features
+General settings for both timers (alarm volume, auto-start, notification)
 
-Button
-Start : Start new timer, or resume the stopped timer
-Pause : Pause the running timer
-Reset : Resets pomodoro/break timer to it's initial settings
-Settings : open settings window
+</br>
+
+Keydown
+Space : Toggle start ↔ pause
+R : Resets main/break timer (break timer is maintained)
+CTRL + R : Total reset back to the main timer
+
+In modal window
+Space or Enter : save changes
