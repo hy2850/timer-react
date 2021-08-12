@@ -19,7 +19,7 @@ function Timer(props) {
     // States for timer
     const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
     const [didStart, setDidStart] = useState(false);
-    let onBreak = useRef(false);
+    const [onBreak, setBreak] = useState(false);
 
     // Etc
     const [modalOpen, setModalOpen] = useState(false);
@@ -29,7 +29,7 @@ function Timer(props) {
     //======================================================
     // Update clock
     useEffect(() => {
-        if(curTime == -1) setCurTime(onBreak.current ? initBreak.current : initTime.current); // starting a new timer
+        if(curTime == -1) setCurTime(onBreak ? initBreak.current : initTime.current); // starting a new timer
         setKey(key => key + 1); // re-render writableClock
     }, [curTime]);
 
@@ -48,7 +48,7 @@ function Timer(props) {
         else if (evt.code === 'KeyR'){
             if(evt.ctrlKey){
                 evt.preventDefault(); // remove 'Ctrl+R' reload page
-                onBreak.current = false; // total reset (back to main timer)
+                setBreak(false);
             }
             reset();
         }
@@ -62,9 +62,9 @@ function Timer(props) {
             const refreshInterval = setInterval(() => {
                 if(curTime === 0) {
                     beep();
-                    onBreak.current = !onBreak.current; // toggle break status
+                    setBreak(onBreak => !onBreak); // toggle break status
                     reset();
-                    if (onBreak.current) setDidStart(true); // start break
+                    if (onBreak) setDidStart(true); // start break
                     else if (autoStart.current) setDidStart(true); // option : autostart (Inf Loop? Stack?)
                     return;
                 }
@@ -111,7 +111,7 @@ function Timer(props) {
         initTime.current = timeObj.timerTime;
         initBreak.current = timeObj.breakTime;
         reset();
-        setCurTime(onBreak.current ? initBreak.current : initTime.current);
+        setCurTime(onBreak ? initBreak.current : initTime.current);
         
         // Update initTime and cache
         const key = 'initTimeSettings-json';
@@ -139,7 +139,7 @@ function Timer(props) {
             timerTime : initTime.current,
             breakTime : initBreak.current
         }
-        if(onBreak.current){
+        if(onBreak){
             Object.assign(timeObj, {breakTime : time});
         }
         else{
@@ -150,15 +150,14 @@ function Timer(props) {
     }
 
     function toggleBreak(){
-        console.log("check");
-
-        // testing
+        setBreak(onBreak=>!onBreak);
+        reset(false);
     }
 
     return (
         <div className = "timerNswitch">
             <div className = "timerBox">
-                <span id = "breakNotify">{onBreak.current ? "(on Break)" : " "}</span>
+                <span id = "breakNotify">{onBreak ? "(on Break)" : " "}</span>
                 <br/>
                 <p>
                     <WritableClock
@@ -178,7 +177,7 @@ function Timer(props) {
             </div>
 
             <label className="switch">
-                <input type="checkbox" onClick={()=>toggleBreak()}></input>
+                <input type="checkbox" onClick={()=>toggleBreak()} checked={onBreak}></input>
                 <span className="slider round"></span>
             </label>
 
