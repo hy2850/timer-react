@@ -77,14 +77,14 @@
   flex-direction: column;
 }
 
-.settings-container-time input#time {
+.settings-container-time input.time {
   width: 50px;
   height: 30px;
   font-size: medium;
 }
 
 /* slider */
-.slider {
+.settings-container-slider .slide#volume {
   width: 90%;
 }
 

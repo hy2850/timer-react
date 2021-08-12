@@ -12,7 +12,7 @@ export default function WritableClock(props) {
 
     // Init time with props.time
     useEffect(()=>{
-        console.log(`WritableClock is rendering : ${props.time}`);
+        //console.log(`WritableClock is rendering : ${props.time}`);
         let min = Math.floor(props.time/MINIUTE); min = min.toString().padStart(2, '0');
         let sec = props.time%MINIUTE; sec = sec.toString().padStart(2, '0');
         setMin(min); setSec(sec);

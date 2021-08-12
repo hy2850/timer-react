@@ -48,14 +48,14 @@ export default function TimeSettingsModal(props) {
                             <div className="settings-container-time">
                                 <label>
                                     Timer &nbsp;
-                                    <input id="time" type="number" step="5" min="0" max="99" 
+                                    <input className="time" type="number" step="5" min="0" max="99" 
                                             value={timerMin} 
                                             onChange={(evt)=>{setTimerMin(evt.target.value);}}/>
                                 </label>
 
                                 <label>
                                     Break &nbsp;
-                                    <input id="time" type="number" step="5" min="0" max="99" 
+                                    <input className="time" type="number" step="1" min="0" max="99" 
                                             value={breakMin} 
                                             onChange={(evt)=>{setBreakMin(evt.target.value);}}/>
                                 </label>

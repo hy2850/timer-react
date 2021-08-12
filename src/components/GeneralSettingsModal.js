@@ -64,7 +64,7 @@ export default function GeneralSettingsModal(props) {
 
                             <div className="settings-container-slider">
                                 Select alarm volume
-                                <input className="slider" id="volume" type="range" min="0" max="1" step="0.01" 
+                                <input className="slide" id="volume" type="range" min="0" max="1" step="0.01" 
                                 value={vol}
                                 onChange={(evt)=>{setVol(evt.target.value);}}></input>
                             </div>
