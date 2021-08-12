@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.timerNswitch {
+  display: flex;
+  align-items: center;
+
+  margin-top: 50px;
+}
+
 .timerBox {
   display: flex;
   flex-direction: column;
@@ -13,9 +20,7 @@
   border-radius: 15px;
 
   padding-bottom: 5px;
-  margin-top: 50px;
-
-  width: 40%;
+  width: 300px;
 }
 
 #breakNotify {
@@ -68,14 +73,6 @@
   color: #1d1d1d;
 }
 
-/* Toggle long timer */
-.timerBox[data-long] {
-  transform: scale(0);
-}
-.timerBox[data-long].active {
-  transform: scale(1);
-}
-
 /* Writable Clock */
 #timer {
   font-size: 3.5rem;
@@ -86,4 +83,69 @@
   font-size: 3.5rem;
   width: 2ch;
   height: 2ch;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 60px;
+
+  margin-left: 5px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 2px;
+  bottom: 30px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateY(26px);
+  -ms-transform: translateY(26px);
+  transform: translateY(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

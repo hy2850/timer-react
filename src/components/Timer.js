@@ -149,10 +149,15 @@ function Timer(props) {
         applyTimeSettings(timeObj);
     }
 
+    function toggleBreak(){
+        console.log("check");
+
+        // testing
+    }
 
     return (
-        <>
-            <div className = "timerBox" data-short>
+        <div className = "timerNswitch">
+            <div className = "timerBox">
                 <span id = "breakNotify">{onBreak.current ? "(on Break)" : " "}</span>
                 <br/>
                 <p>
@@ -172,13 +177,18 @@ function Timer(props) {
                 </div>
             </div>
 
+            <label className="switch">
+                <input type="checkbox" onClick={()=>toggleBreak()}></input>
+                <span className="slider round"></span>
+            </label>
+
             <TimeSettingsModal 
                 type={props.type}
                 isOpen={modalOpen} 
                 close={()=>setModalOpen(false)} 
                 save={(timeObj)=>applyTimeSettings(timeObj)}>
             </TimeSettingsModal>
-        </>
+        </div>
     );
 }
 
