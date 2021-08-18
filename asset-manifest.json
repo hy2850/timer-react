@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/timer-react/static/css/main.6bccea85.chunk.css",
-    "main.js": "/timer-react/static/js/main.205da264.chunk.js",
-    "main.js.map": "/timer-react/static/js/main.205da264.chunk.js.map",
+    "main.css": "/timer-react/static/css/main.6fbaf591.chunk.css",
+    "main.js": "/timer-react/static/js/main.91c6b279.chunk.js",
+    "main.js.map": "/timer-react/static/js/main.91c6b279.chunk.js.map",
     "runtime-main.js": "/timer-react/static/js/runtime-main.10c680a6.js",
     "runtime-main.js.map": "/timer-react/static/js/runtime-main.10c680a6.js.map",
-    "static/js/2.fc9dae07.chunk.js": "/timer-react/static/js/2.fc9dae07.chunk.js",
-    "static/js/2.fc9dae07.chunk.js.map": "/timer-react/static/js/2.fc9dae07.chunk.js.map",
+    "static/js/2.13cce68b.chunk.js": "/timer-react/static/js/2.13cce68b.chunk.js",
+    "static/js/2.13cce68b.chunk.js.map": "/timer-react/static/js/2.13cce68b.chunk.js.map",
     "index.html": "/timer-react/index.html",
-    "static/css/main.6bccea85.chunk.css.map": "/timer-react/static/css/main.6bccea85.chunk.css.map",
-    "static/js/2.fc9dae07.chunk.js.LICENSE.txt": "/timer-react/static/js/2.fc9dae07.chunk.js.LICENSE.txt",
+    "static/css/main.6fbaf591.chunk.css.map": "/timer-react/static/css/main.6fbaf591.chunk.css.map",
+    "static/js/2.13cce68b.chunk.js.LICENSE.txt": "/timer-react/static/js/2.13cce68b.chunk.js.LICENSE.txt",
     "static/media/beep.3078eb82.mp3": "/timer-react/static/media/beep.3078eb82.mp3",
     "static/media/bell.b1616f76.mp3": "/timer-react/static/media/bell.b1616f76.mp3"
   },
   "entrypoints": [
     "static/js/runtime-main.10c680a6.js",
-    "static/js/2.fc9dae07.chunk.js",
-    "static/css/main.6bccea85.chunk.css",
-    "static/js/main.205da264.chunk.js"
+    "static/js/2.13cce68b.chunk.js",
+    "static/css/main.6fbaf591.chunk.css",
+    "static/js/main.91c6b279.chunk.js"
   ]
 }
