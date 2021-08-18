@@ -16,7 +16,8 @@ These To-do's are sorted in the order of completion
 - [x] <span style="color:blue">[17June21]</span> Toggle 'start' or create 'pause' button to pause the timer
 - [x] <span style="color:blue">[17June21]</span> Keyboard input (space) to toggle start/pause
 - [x] <span style="color:blue">[27June21]</span> Keyboard input ('R') to reset
-  - [ ] 'RR' to revert to the original timer from break-timer
+  - [x] <span style="color:blue">[3Aug21'R]</span>'RR' to revert to the original timer from break-timer
+        → Ctrl+R
 - [x] <span style="color:blue">[28June21]</span> Different bell for long-timer and fade-out
 - [x] <span style="color:blue">[28June21]</span>Design (Buttons, clock, ...) </br>
   - Different color theme for Night mode?
@@ -29,7 +30,7 @@ Limited to two timers (further work : react componentize to create more than two
 Break mode is not separated - timer to break auto transition is default
 (Do we really need to create another separate tab for break timer?)
 
-함수 별 modularization 잘 한듯.  
+함수별 modularization 잘 한듯.  
 reset 재활용해서 pause 만들기  
 countDown 재활용해서 break 모드 만들기
 
@@ -40,8 +41,16 @@ countDown 재활용해서 break 모드 만들기
 - [x] <span style="color:blue">[25July21'R']</span> Auto-start after each cycle ends
 - [x] <span style="color:blue">[25July21'R']</span> Option to adjust volume of timer sound
 - [x] <span style="color:blue">[25July21'R']</span> Create general settings for both clock
-- [x] <span style="color:blue">[1Aug21'R']</span>Change time by clicking and re-writing clock itself
-- [ ] Option in 'Settings', to reset the settings
+- [x] <span style="color:blue">[1Aug21'R']</span> Change time by clicking and re-writing clock itself
+- [x] <span style="color:blue">[3Aug21'R']</span> Sync current settings with modal options display
+      (ex. if current short timer has timer set to 10 min, show 10 min in 'timeSettingsModal' when opened)
+- [x] <span style="color:blue">[3Aug21'R']</span> Option in 'Settings', to reset the settings
+      → 'reset settings' in App.js header
+- [x] <span style="color:blue">[12Aug21'R']</span> Add toggle to change timer to break mode (back and forth)
+- [x] <span style="color:blue">[12Aug21'R']</span> Change tab icon and title
+- [x] <span style="color:blue">[18Aug21'R']</span> Add Chrome Notification
+- [ ] For invalid input in writableClock, use small overlay popup for notification
+      (called 'toast'?)
 
 </br>
 
@@ -56,9 +65,25 @@ countDown 재활용해서 break 모드 만들기
 
 - [x] Changing time setting in break mode, causes break mode to have the timer Time
       → <span style="color:blue">[1Aug21'R']</span> Fixed argument for 'setCurTime' in 'applyTimeSettings'
-      </br>
+
+- [x] <span style="color:blue">[18Aug21'R']</span> useLayoutEffect to remove clock rendering gap (00:00 -> 25:00)
+
+- [ ] When in another tab or another unused window, alarm doesn't seem to go off (deactivated?)
+      (Audio stacks up at the moment of timer completion, if the window is not active at the moment)
+      → single-threaded JS의 setInterval 구조적 한계?
+      https://stackoverflow.com/questions/23506103/setinterval-slows-down-with-tab-window-inactive
+- [ ] Ask for confirmation when 'reset settings' (clear localStorage)
+
+</br>
 
 ###**Further works**
+
+- Use Redux (to clean-up the data transfer between the components, e.g. timer ↔ modal)
+- Responsive web (layout changing to window size - CSS grid?)
+- Adopt SCSS to clean-up messey CSS
+  (I really need to adopt **solid CSS naming rules**)
+
+</br>
 
 - Scheduling (Sign-in, track record) - back-end study?
 - Desk-top or mobile application
@@ -83,3 +108,11 @@ countDown 재활용해서 break 모드 만들기
   https://www.w3schools.com/howto/howto_js_rangeslider.asp
 - position:fixed center element (modal)
   https://stackoverflow.com/questions/2005954/center-a-positionfixed-element
+- Multiple keydown
+  - https://stackoverflow.com/questions/5203407/how-to-detect-if-multiple-keys-are-pressed-at-once-using-javascript
+  - https://stackoverflow.com/questions/29250534/event-keycode-alternative/29254154
+
+</br>
+
+- Toggle switch  
+  https://www.w3schools.com/howto/howto_css_switch.asp

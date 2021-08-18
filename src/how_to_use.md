@@ -10,7 +10,7 @@ General settings for both timers (alarm volume, auto-start, notification)
 Keydown
 Space : Toggle start ↔ pause
 R : Resets main/break timer (break timer is maintained)
-CTRL + R : Total reset back to the main timer
+CTRL + R : Resets break timer back to the main timer
 
 In modal window
 Space or Enter : save changes

@@ -3,7 +3,7 @@
   top: 40%;
   left: 50%;
   width: 500px;
-  height: 230px;
+  height: 240px;
   margin-top: -150px; /* Negative half of height. */
   margin-left: -250px; /* Negative half of width. */
 
@@ -63,6 +63,15 @@
   display: flex;
   flex-direction: column;
   padding: 0px 5px 15px;
+}
+
+/* genSettingsModal checkbox container */
+.modal-body .settings-container-checkbox {
+  display: flex;
+  flex-direction: column;
+}
+.modal-body .settings-container-checkbox label {
+  margin: 1px;
 }
 
 /* TimeSettingsModal */
