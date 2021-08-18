@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
+import { useSelector } from 'react-redux';
 import '../styles/Timer.css';
 
 import TimeSettingsModal from './TimeSettingsModal.js';
@@ -7,7 +8,7 @@ import WritableClock from './WritableClock';
 import BEEP from '../sound/beep.mp3'
 import BELL from '../sound/bell.mp3'
 
-const MINIUTE = 60;
+const MINUTE = 60;
 
 function Timer(props) {
     // Options - preserve with useRef 
@@ -25,22 +26,21 @@ function Timer(props) {
     const [modalOpen, setModalOpen] = useState(false);
     const [key, setKey] = useState(0); // to re-render child component writableClock.js
 
-    
+    // Redux
+    const onNoti = useSelector(state => state.notification.onNoti);
+
+
     //======================================================
-    // Update clock
-    useEffect(() => {
-        if(curTime == -1) setCurTime(onBreak ? initBreak.current : initTime.current); // starting a new timer
-        setKey(key => key + 1); // re-render writableClock
-    }, [curTime]);
-
-
-    // init clock & set keyboard keydown
-    useEffect(() => {
-        setCurTime(initTime.current);
-
+    // init clock
+    useLayoutEffect(()=>{
+        setCurTime(onBreak ? initBreak.current : initTime.current); // starting a new timer
+    }, []);
+    
+    // init - set keyboard keydown
+    useLayoutEffect(()=>{
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
-    }, []);
+    });
 
     const keydownEvents = (evt)=>{
         if(evt.code === 'Space')
@@ -50,42 +50,64 @@ function Timer(props) {
                 evt.preventDefault(); // remove 'Ctrl+R' reload page
                 setBreak(false);
             }
-            reset();
+            else
+                reset();
         }
     };
 
 
     // =============================================================================
+    // Update clock
+    useEffect(() => {
+        setKey(key => key + 1); // re-render writableClock
+    }, [curTime]);  
+
     // countDown
     useEffect(() => {
         if(didStart){
-            const refreshInterval = setInterval(() => {
+            var refreshInterval = setInterval(() => {
                 if(curTime === 0) {
                     beep();
                     setBreak(onBreak => !onBreak); // toggle break status
-                    reset();
-                    if (onBreak) setDidStart(true); // start break
-                    else if (autoStart.current) setDidStart(true); // option : autostart (Inf Loop? Stack?)
+                    //reset();
+                    // restart taken care of by useEffect[onBreak]
                     return;
                 }
                 setCurTime(curTime => curTime-1);        
             }, 1000);
-            return () => clearInterval(refreshInterval);
         }
+        return () => clearInterval(refreshInterval);
     }, [didStart, curTime]);
 
+    // onBreak - Break start or timer restart
+    useEffect(() => {
+        reset();
 
+        if(curTime != 0) return; // not the moment of timer end
+
+        // Break start
+        if(onBreak){
+            setDidStart(true); // start break
+            sendNotification(true);
+        }
+        // Break over
+        else if (autoStart.current) {
+            setDidStart(true); // option : autostart (Inf Loop? Stack?)
+            sendNotification(false);
+        }
+    }, [onBreak]);
+
+
+    // =============================================================================
     function reset(doPause = false){
         console.log(doPause ? "Pausing" : "Resetting");
         setDidStart(false);
     
         // resetting, not pause
         if(!doPause) {
-            //if(onBreak.current) onBreak.current = false; // messes-up break mode
-            setCurTime(-1);
+            setCurTime(onBreak ? initBreak.current : initTime.current); 
         }
     }
-
 
     function beep() {
         let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
@@ -105,13 +127,32 @@ function Timer(props) {
         audio.play(); 
     }
 
+    function toggleBreak(){
+        setBreak(onBreak=>!onBreak);
+        reset();
+    }
+
+    function sendNotification(breakStart = true){
+        console.log("Noti : ", onNoti);
+        if(!onNoti) return;
+        
+        const type = `${props.type === "SHORT" ? "Short" : "Long"}`;
+        const title = type + " timer" + `${breakStart ? " over!" : " start!"}`;
+        const body = `${breakStart ? "Break time " + initBreak.current / MINUTE  : "Focus for another " + initTime.current / MINUTE}` + " minutes"
+
+        new Notification(title, {
+            body: body
+        });
+    }
+
+
     // =============================================================================
     // apply new settings from 'SettingsModal'
     function applyTimeSettings(timeObj){
         initTime.current = timeObj.timerTime;
         initBreak.current = timeObj.breakTime;
         reset();
-        setCurTime(onBreak ? initBreak.current : initTime.current);
+        //setCurTime(onBreak ? initBreak.current : initTime.current); // debug
         
         // Update initTime and cache
         const key = 'initTimeSettings-json';
@@ -149,10 +190,6 @@ function Timer(props) {
         applyTimeSettings(timeObj);
     }
 
-    function toggleBreak(){
-        setBreak(onBreak=>!onBreak);
-        reset(false);
-    }
 
     return (
         <div className = "timerNswitch">
@@ -177,7 +214,7 @@ function Timer(props) {
             </div>
 
             <label className="switch">
-                <input type="checkbox" onClick={()=>toggleBreak()} checked={onBreak}></input>
+                <input type="checkbox" onChange={()=>toggleBreak()} checked={onBreak}></input>
                 <span className="slider round"></span>
             </label>
 

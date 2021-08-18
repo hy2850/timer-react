@@ -1,4 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { turnOn, turnOff } from '../slices/notiSlice';
 import '../styles/SettingsModal.css';
 import Modal from 'react-modal';
 
@@ -7,6 +9,10 @@ Modal.setAppElement('#root');
 export default function GeneralSettingsModal(props) {
     const [vol, setVol] = useState(props.curSettings.volume);
     const [autoStart, setAutoStart] = useState(props.curSettings.autoStart);
+    
+    // Redux
+    const onNoti = useSelector(state => state.notification.onNoti);
+    const dispatch = useDispatch();
 
     // set keyboard keydown
     useEffect(() => {
@@ -35,6 +41,30 @@ export default function GeneralSettingsModal(props) {
         props.close();
     }
 
+    function checkPermission(){
+        console.log(Notification.permission, onNoti);
+
+        // Check off - Turn off notification
+        if(onNoti){
+            dispatch(turnOff());
+        }
+        // Check on - Turn on the notification, ask for permission if not granted yet 
+        else{
+            if(Notification.permission !== "granted"){
+                Notification.requestPermission().then(permission => {
+                    if(permission === "granted"){
+                        console.log("Permission granted");
+                        dispatch(turnOn());
+                    }
+                    else console.log("Permission denied");
+                })
+            }
+            else{
+                dispatch(turnOn());
+            }
+        }
+    }
+
     return (
         <Modal 
             className="modal" 
@@ -58,6 +88,12 @@ export default function GeneralSettingsModal(props) {
                                         onChange={()=>{setAutoStart(autoStart=>!autoStart);}}>
                                     </input> Auto start timers and breaks?
                                 </label>
+                                <label>
+                                    <input type="checkbox" 
+                                        checked={onNoti} 
+                                        onChange={()=>{checkPermission()}}>
+                                    </input> Send notification when the timer is over
+                                </label>
                             </div>
                             
                             <br/>
@@ -70,7 +106,6 @@ export default function GeneralSettingsModal(props) {
                             </div>
                         </div>
                         <input className="settings-save" type="submit" value="Submit" />
-                        <input className="settings-save" type="reset" value="Reset" />
                     </form>
                 </div>
             </div>
