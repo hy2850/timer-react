@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import '../styles/App.css';
-import Timer from './Timer';
-import GeneralSettingsModal from './GeneralSettingsModal.js';
+import './styles/App.css';
+import Timer from './components/Timer';
+import GeneralSettingsModal from './components/GeneralSettingsModal.js';
 
 function App(props) {
   const [toggleSecond, setToggleSecond] = useState(false);
@@ -38,7 +38,8 @@ function App(props) {
   // General settings - for both timers : volume, autostart, ...
   const [genSettingsObj, setSettingsObj] = useState({
     volume: 1,
-    autoStart: false
+    autoStart: false,
+    onNoti: false
   });
   const [key, setKey] = useState(0);
 
