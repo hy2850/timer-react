@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
 import { useSelector } from 'react-redux';
 import {useInterval} from 'react-use';
+import moment from 'moment';
 import '../styles/Timer.css';
 
 import TimeSettingsModal from './TimeSettingsModal.js';
@@ -19,6 +20,7 @@ function Timer(props) {
     let autoStart = useRef(props.settings.autoStart);
 
     // States for timer
+    let anchorDate = useRef(null);
     const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
     const [didStart, setDidStart] = useState(false);
     const [onBreak, setBreak] = useState(false);
@@ -63,31 +65,43 @@ function Timer(props) {
         setKey(key => key + 1); // re-render writableClock
     }, [curTime]);  
 
+
     // countDown
+    useEffect(() => {
+        if(didStart)
+            anchorDate.current = moment().add(curTime, 's');
+    }, [didStart]);
+
     useInterval(() => {
-        if(curTime === 0) {
+        if(curTime <= 0) {
             beep();
             setBreak(onBreak => !onBreak); // toggle break status
             //reset();
             // restart taken care of by useEffect[onBreak]
             return;
         }
-        setCurTime(curTime => curTime-1);   
+
+        let diff = anchorDate.current.diff(moment()); // returns milliseconds
+        setCurTime(Math.round(diff/1000));
     }, didStart ? 1000 : null);
 
+    
     // onBreak - Break start or timer restart
     useEffect(() => {
         reset();
 
-        if(curTime != 0) return; // not the moment of timer end
+        if(curTime > 0) return; // user input break - time still left on the timer
 
         // Break start
         if(onBreak){
+            anchorDate.current = moment().add(initBreak.current, 's');
+            console.log("Break start : ", moment(), anchorDate.current)
             setDidStart(true); // start break
             sendNotification(true);
         }
         // Break over
         else if (autoStart.current) {
+            anchorDate.current = moment().add(initTime.current, 's');
             setDidStart(true); // option : autostart (Inf Loop? Stack?)
             sendNotification(false);
         }
