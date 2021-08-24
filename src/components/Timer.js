@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
 import { useSelector } from 'react-redux';
+import {useInterval} from 'react-use';
 import '../styles/Timer.css';
 
 import TimeSettingsModal from './TimeSettingsModal.js';
@@ -12,10 +13,10 @@ const MINUTE = 60;
 
 function Timer(props) {
     // Options - preserve with useRef 
-    let initTime = useRef(props.settings.timerTime); // 초기값 props.settingsObj.timerTime
-    let initBreak = useRef(props.settings.breakTime); // 초기값 props.settingsObj.breakTime
-    let alarmVol = useRef(props.settings.volume); // 초기값 props.settingsObj.volume
-    let autoStart = useRef(props.settings.autoStart); // 초기값 props.settingsObj.autoStart
+    let initTime = useRef(props.settings.timerTime);
+    let initBreak = useRef(props.settings.breakTime);
+    let alarmVol = useRef(props.settings.volume);
+    let autoStart = useRef(props.settings.autoStart);
 
     // States for timer
     const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
@@ -63,21 +64,16 @@ function Timer(props) {
     }, [curTime]);  
 
     // countDown
-    useEffect(() => {
-        if(didStart){
-            var refreshInterval = setInterval(() => {
-                if(curTime === 0) {
-                    beep();
-                    setBreak(onBreak => !onBreak); // toggle break status
-                    //reset();
-                    // restart taken care of by useEffect[onBreak]
-                    return;
-                }
-                setCurTime(curTime => curTime-1);        
-            }, 1000);
+    useInterval(() => {
+        if(curTime === 0) {
+            beep();
+            setBreak(onBreak => !onBreak); // toggle break status
+            //reset();
+            // restart taken care of by useEffect[onBreak]
+            return;
         }
-        return () => clearInterval(refreshInterval);
-    }, [didStart, curTime]);
+        setCurTime(curTime => curTime-1);   
+    }, didStart ? 1000 : null);
 
     // onBreak - Break start or timer restart
     useEffect(() => {
