@@ -58,9 +58,10 @@ function App(props) {
   // =============================================================================
   // Reset
   function resetAllSettings(){
-    localStorage.clear(); 
-    alert("Cleared!");
-    document.location.reload(); // reload webpage
+    if(window.confirm("Reset settings?")){
+      localStorage.clear(); 
+      document.location.reload(); // reload webpage
+    }
   }
 
 
