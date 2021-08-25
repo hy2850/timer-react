@@ -49,8 +49,9 @@ countDown 재활용해서 break 모드 만들기
 - [x] <span style="color:blue">[12Aug21'R']</span> Add toggle to change timer to break mode (back and forth)
 - [x] <span style="color:blue">[12Aug21'R']</span> Change tab icon and title
 - [x] <span style="color:blue">[18Aug21'R']</span> Add Chrome Notification
+  - [x] <span style="color:blue">[25Aug21'R']</span> Focus to timer when clicking notification
 - [ ] For invalid input in writableClock, use small overlay popup for notification
-      (called 'toast'?)
+      (called 'toast'? - more like a tooltip)
 
 </br>
 
@@ -91,8 +92,9 @@ countDown 재활용해서 break 모드 만들기
 </br>
 
 ###**References**
+Functions
 
-- Padding
+- Clock Padding
   https://stackoverflow.com/questions/2998784/how-to-output-numbers-with-leading-zeros-in-javascript
 - Add sound
   https://www.geeksforgeeks.org/how-to-make-a-beep-sound-in-javascript/
@@ -103,16 +105,19 @@ countDown 재활용해서 break 모드 만들기
   https://velog.io/@yijaee/%EB%8B%A4%ED%81%AC%EB%AA%A8%EB%93%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
 - JSON
   https://developer.mozilla.org/ko/docs/Learn/JavaScript/Objects/JSON
-  </br>
+- Multiple keydown
+  - https://stackoverflow.com/questions/5203407/how-to-detect-if-multiple-keys-are-pressed-at-once-using-javascript
+  - https://stackoverflow.com/questions/29250534/event-keycode-alternative/29254154
+- Chrome Notification
+  https://www.youtube.com/watch?v=Jncoj-Gvh9o&ab_channel=dcode
+
+</br>
+
+Design
+
 - slider
   https://www.w3schools.com/howto/howto_js_rangeslider.asp
 - position:fixed center element (modal)
   https://stackoverflow.com/questions/2005954/center-a-positionfixed-element
-- Multiple keydown
-  - https://stackoverflow.com/questions/5203407/how-to-detect-if-multiple-keys-are-pressed-at-once-using-javascript
-  - https://stackoverflow.com/questions/29250534/event-keycode-alternative/29254154
-
-</br>
-
 - Toggle switch  
   https://www.w3schools.com/howto/howto_css_switch.asp

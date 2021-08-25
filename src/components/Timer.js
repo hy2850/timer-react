@@ -10,7 +10,10 @@ import WritableClock from './WritableClock';
 import BEEP from '../sound/beep.mp3'
 import BELL from '../sound/bell.mp3'
 
+import IMG from '../img/tomato.png'
+
 const MINUTE = 60;
+const TITLE = "Pomodoro Timer+";
 
 function Timer(props) {
     // Options - preserve with useRef 
@@ -63,6 +66,13 @@ function Timer(props) {
     // Update clock
     useEffect(() => {
         setKey(key => key + 1); // re-render writableClock
+        
+        if(didStart){
+            let min = Math.floor(curTime/MINUTE); min = min.toString();
+            let sec = curTime%MINUTE; sec = sec.toString();
+            const clockStr = (min.padStart(2, '0') + ":" + sec.padStart(2, '0'));
+            document.title = "(" + clockStr + ") " + TITLE;
+        }
     }, [curTime]);  
 
 
@@ -70,6 +80,8 @@ function Timer(props) {
     useEffect(() => {
         if(didStart)
             anchorDate.current = moment().add(curTime, 's');
+        else
+            document.title = TITLE;
     }, [didStart]);
 
     useInterval(() => {
@@ -150,8 +162,16 @@ function Timer(props) {
         const title = type + " timer" + `${breakStart ? " over!" : " start!"}`;
         const body = `${breakStart ? "Break time " + initBreak.current / MINUTE  : "Focus for another " + initTime.current / MINUTE}` + " minutes"
 
-        new Notification(title, {
-            body: body
+        const notification = new Notification(title, {
+            body: body,
+            icon : IMG
+        });
+
+        notification.addEventListener('click', (evt) => {
+            //parent.focus();
+            window.focus();
+            console.log(evt.target);
+            //evt.target.close();
         });
     }
 
