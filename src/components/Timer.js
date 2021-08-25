@@ -24,7 +24,7 @@ function Timer(props) {
 
     // States for timer
     let anchorDate = useRef(null);
-    const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
+    const [curTime, setCurTime] = useState(initTime.current);
     const [didStart, setDidStart] = useState(false);
     const [onBreak, setBreak] = useState(false);
 
@@ -33,15 +33,10 @@ function Timer(props) {
     const [key, setKey] = useState(0); // to re-render child component writableClock.js
 
     // Redux
-    const onNoti = useSelector(state => state.notification.onNoti);
+    const onNoti = useSelector(state => state.onNoti);
 
 
-    //======================================================
-    // init clock
-    useLayoutEffect(()=>{
-        setCurTime(onBreak ? initBreak.current : initTime.current); // starting a new timer
-    }, []);
-    
+    //======================================================    
     // init - set keyboard keydown
     useLayoutEffect(()=>{
         document.addEventListener('keydown', keydownEvents);
@@ -101,7 +96,7 @@ function Timer(props) {
     // onBreak - Break start or timer restart
     useEffect(() => {
         reset();
-
+        
         if(curTime > 0) return; // user input break - time still left on the timer
 
         // Break start

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { turnOn, turnOff } from '../slices/notiSlice';
 import '../styles/SettingsModal.css';
@@ -11,7 +11,7 @@ export default function GeneralSettingsModal(props) {
     const [autoStart, setAutoStart] = useState(props.curSettings.autoStart);
     
     // Redux
-    const onNoti = useSelector(state => state.notification.onNoti);
+    const onNoti = useSelector(state => state.onNoti);
     const dispatch = useDispatch();
 
     // set keyboard keydown
@@ -42,8 +42,6 @@ export default function GeneralSettingsModal(props) {
     }
 
     function checkPermission(){
-        console.log(Notification.permission, onNoti);
-
         // Check off - Turn off notification
         if(onNoti){
             dispatch(turnOff());
