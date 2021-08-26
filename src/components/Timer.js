@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
 import { useSelector } from 'react-redux';
-import {useInterval} from 'react-use';
+import {useInterval, useUpdateEffect} from 'react-use';
 import moment from 'moment';
 import '../styles/Timer.css';
 
@@ -36,7 +36,7 @@ function Timer(props) {
     const onNoti = useSelector(state => state.onNoti);
 
 
-    //======================================================    
+    //======================================================
     // init - set keyboard keydown
     useLayoutEffect(()=>{
         document.addEventListener('keydown', keydownEvents);
@@ -59,9 +59,10 @@ function Timer(props) {
 
     // =============================================================================
     // Update clock
-    useEffect(() => {
+    useUpdateEffect(() => {
         setKey(key => key + 1); // re-render writableClock
         
+        // Update browser tab title with short clock
         if(didStart){
             let min = Math.floor(curTime/MINUTE); min = min.toString();
             let sec = curTime%MINUTE; sec = sec.toString();
@@ -94,7 +95,7 @@ function Timer(props) {
 
     
     // onBreak - Break start or timer restart
-    useEffect(() => {
+    useUpdateEffect(() => {
         reset();
         
         if(curTime > 0) return; // user input break - time still left on the timer
@@ -116,8 +117,9 @@ function Timer(props) {
 
 
     // =============================================================================
+    // Reset/pause timer
     function reset(doPause = false){
-        console.log(doPause ? "Pausing" : "Resetting");
+        //console.log(doPause ? "Pausing" : "Resetting");
         setDidStart(false);
     
         // resetting, not pause
@@ -126,6 +128,7 @@ function Timer(props) {
         }
     }
 
+    // Timer ending alarm
     function beep() {
         let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
 
@@ -149,6 +152,7 @@ function Timer(props) {
         reset();
     }
 
+    // Send browser notification (tested on Chrome)
     function sendNotification(breakStart = true){
         console.log("Noti : ", onNoti);
         if(!onNoti) return;
@@ -172,12 +176,11 @@ function Timer(props) {
 
 
     // =============================================================================
-    // apply new settings from 'SettingsModal'
+    // apply new settings from 'TimeSettingsModal'
     function applyTimeSettings(timeObj){
         initTime.current = timeObj.timerTime;
         initBreak.current = timeObj.breakTime;
         reset();
-        //setCurTime(onBreak ? initBreak.current : initTime.current); // debug
         
         // Update initTime and cache
         const key = 'initTimeSettings-json';
@@ -194,7 +197,6 @@ function Timer(props) {
                 longBT : timeObj.breakTime
             });
         }
-        props.update_initTime(initTimeObj => Object.assign({}, initTimeObj, cachedTimeObj)); // also update 'initTimeObj' state in App.js
         window.localStorage.setItem(key, JSON.stringify(cachedTimeObj)); // cache time settings
     }
 
