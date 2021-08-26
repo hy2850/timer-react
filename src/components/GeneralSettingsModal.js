@@ -16,11 +16,9 @@ export default function GeneralSettingsModal(props) {
 
     // set keyboard keydown
     useEffect(() => {
-        if(!props.isOpen) return; // disable keydown when closed
-
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
-    }, [props.isOpen]);
+    });
     
     const keydownEvents = (evt)=>{
         if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')){ // only when the modal is opened
@@ -36,6 +34,7 @@ export default function GeneralSettingsModal(props) {
         const settingsObj = {
             volume: Number.parseFloat(vol),
             autoStart: autoStart,
+            //onNoti: onNoti
         }
         props.save(settingsObj);
         props.close();
