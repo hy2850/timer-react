@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import '../styles/Timer.css';
 
 export default function WritableClock(props) {
@@ -11,7 +11,7 @@ export default function WritableClock(props) {
     const MIN = 0, SEC = 1, MINIUTE = 60;
 
     // Init time with props.time
-    useEffect(()=>{
+    useLayoutEffect(()=>{
         //console.log(`WritableClock is rendering : ${props.time}`);
         let min = Math.floor(props.time/MINIUTE); min = min.toString().padStart(2, '0');
         let sec = props.time%MINIUTE; sec = sec.toString().padStart(2, '0');
@@ -43,6 +43,8 @@ export default function WritableClock(props) {
         const type = (target===MIN ? "Minute" : "Second");
         let oldT = parseInt(target===MIN ? min : sec);
         let newT = parseInt(tmp);
+
+        // Validation
         if(isNaN(newT)){
             alert(`${type} must be a number between 0 to ${target===MIN ? 99 : 59}`);
         }

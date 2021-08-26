@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { turnOn, turnOff } from '../slices/notiSlice';
 import '../styles/SettingsModal.css';
@@ -11,16 +11,14 @@ export default function GeneralSettingsModal(props) {
     const [autoStart, setAutoStart] = useState(props.curSettings.autoStart);
     
     // Redux
-    const onNoti = useSelector(state => state.notification.onNoti);
+    const onNoti = useSelector(state => state.onNoti);
     const dispatch = useDispatch();
 
     // set keyboard keydown
     useEffect(() => {
-        if(!props.isOpen) return; // disable keydown when closed
-
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
-    }, [props.isOpen]);
+    });
     
     const keydownEvents = (evt)=>{
         if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')){ // only when the modal is opened
@@ -36,14 +34,13 @@ export default function GeneralSettingsModal(props) {
         const settingsObj = {
             volume: Number.parseFloat(vol),
             autoStart: autoStart,
+            //onNoti: onNoti
         }
         props.save(settingsObj);
         props.close();
     }
 
     function checkPermission(){
-        console.log(Notification.permission, onNoti);
-
         // Check off - Turn off notification
         if(onNoti){
             dispatch(turnOff());

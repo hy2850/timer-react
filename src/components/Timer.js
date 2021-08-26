@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
 import { useSelector } from 'react-redux';
-import {useInterval} from 'react-use';
+import {useInterval, useUpdateEffect} from 'react-use';
+import moment from 'moment';
 import '../styles/Timer.css';
 
 import TimeSettingsModal from './TimeSettingsModal.js';
@@ -9,7 +10,10 @@ import WritableClock from './WritableClock';
 import BEEP from '../sound/beep.mp3'
 import BELL from '../sound/bell.mp3'
 
+import IMG from '../img/tomato.png'
+
 const MINUTE = 60;
+const TITLE = "Pomodoro Timer+";
 
 function Timer(props) {
     // Options - preserve with useRef 
@@ -19,7 +23,8 @@ function Timer(props) {
     let autoStart = useRef(props.settings.autoStart);
 
     // States for timer
-    const [curTime, setCurTime] = useState(-1); // -1 for starting a new timer / else resume paused timer
+    let anchorDate = useRef(null);
+    const [curTime, setCurTime] = useState(initTime.current);
     const [didStart, setDidStart] = useState(false);
     const [onBreak, setBreak] = useState(false);
 
@@ -28,15 +33,10 @@ function Timer(props) {
     const [key, setKey] = useState(0); // to re-render child component writableClock.js
 
     // Redux
-    const onNoti = useSelector(state => state.notification.onNoti);
+    const onNoti = useSelector(state => state.onNoti);
 
 
     //======================================================
-    // init clock
-    useLayoutEffect(()=>{
-        setCurTime(onBreak ? initBreak.current : initTime.current); // starting a new timer
-    }, []);
-    
     // init - set keyboard keydown
     useLayoutEffect(()=>{
         document.addEventListener('keydown', keydownEvents);
@@ -59,35 +59,57 @@ function Timer(props) {
 
     // =============================================================================
     // Update clock
-    useEffect(() => {
+    useUpdateEffect(() => {
         setKey(key => key + 1); // re-render writableClock
+        
+        // Update browser tab title with short clock
+        if(didStart){
+            let min = Math.floor(curTime/MINUTE); min = min.toString();
+            let sec = curTime%MINUTE; sec = sec.toString();
+            const clockStr = (min.padStart(2, '0') + ":" + sec.padStart(2, '0'));
+            document.title = "(" + clockStr + ") " + TITLE;
+        }
     }, [curTime]);  
 
+
     // countDown
+    useEffect(() => {
+        if(didStart)
+            anchorDate.current = moment().add(curTime, 's');
+        else
+            document.title = TITLE;
+    }, [didStart]);
+
     useInterval(() => {
-        if(curTime === 0) {
+        if(curTime <= 0) {
             beep();
             setBreak(onBreak => !onBreak); // toggle break status
             //reset();
             // restart taken care of by useEffect[onBreak]
             return;
         }
-        setCurTime(curTime => curTime-1);   
+
+        let diff = anchorDate.current.diff(moment()); // returns milliseconds
+        setCurTime(Math.round(diff/1000));
     }, didStart ? 1000 : null);
 
+    
     // onBreak - Break start or timer restart
-    useEffect(() => {
+    useUpdateEffect(() => {
         reset();
-
-        if(curTime != 0) return; // not the moment of timer end
+        
+        if(curTime > 0) return; // user input break - time still left on the timer
 
         // Break start
         if(onBreak){
+            anchorDate.current = moment().add(initBreak.current, 's');
+            console.log("Break start : ", moment(), anchorDate.current)
             setDidStart(true); // start break
             sendNotification(true);
         }
         // Break over
         else if (autoStart.current) {
+            anchorDate.current = moment().add(initTime.current, 's');
             setDidStart(true); // option : autostart (Inf Loop? Stack?)
             sendNotification(false);
         }
@@ -95,8 +117,9 @@ function Timer(props) {
 
 
     // =============================================================================
+    // Reset/pause timer
     function reset(doPause = false){
-        console.log(doPause ? "Pausing" : "Resetting");
+        //console.log(doPause ? "Pausing" : "Resetting");
         setDidStart(false);
     
         // resetting, not pause
@@ -105,6 +128,7 @@ function Timer(props) {
         }
     }
 
+    // Timer ending alarm
     function beep() {
         let audio = new Audio(props.type === 'SHORT' ? BEEP : BELL);   
 
@@ -128,6 +152,7 @@ function Timer(props) {
         reset();
     }
 
+    // Send browser notification (tested on Chrome)
     function sendNotification(breakStart = true){
         console.log("Noti : ", onNoti);
         if(!onNoti) return;
@@ -136,19 +161,26 @@ function Timer(props) {
         const title = type + " timer" + `${breakStart ? " over!" : " start!"}`;
         const body = `${breakStart ? "Break time " + initBreak.current / MINUTE  : "Focus for another " + initTime.current / MINUTE}` + " minutes"
 
-        new Notification(title, {
-            body: body
+        const notification = new Notification(title, {
+            body: body,
+            icon : IMG
+        });
+
+        notification.addEventListener('click', (evt) => {
+            //parent.focus();
+            window.focus();
+            console.log(evt.target);
+            //evt.target.close();
         });
     }
 
 
     // =============================================================================
-    // apply new settings from 'SettingsModal'
+    // apply new settings from 'TimeSettingsModal'
     function applyTimeSettings(timeObj){
         initTime.current = timeObj.timerTime;
         initBreak.current = timeObj.breakTime;
         reset();
-        //setCurTime(onBreak ? initBreak.current : initTime.current); // debug
         
         // Update initTime and cache
         const key = 'initTimeSettings-json';
@@ -165,7 +197,6 @@ function Timer(props) {
                 longBT : timeObj.breakTime
             });
         }
-        props.update_initTime(initTimeObj => Object.assign({}, initTimeObj, cachedTimeObj)); // also update 'initTimeObj' state in App.js
         window.localStorage.setItem(key, JSON.stringify(cachedTimeObj)); // cache time settings
     }
 

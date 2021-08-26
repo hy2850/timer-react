@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import '../styles/SettingsModal.css';
 import Modal from 'react-modal';
 
@@ -11,11 +11,9 @@ export default function TimeSettingsModal(props) {
 
     // set keyboard keydown
     useEffect(() => {
-        if(!props.isOpen) return; // disable keydown when closed
-
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
-    }, [props.isOpen]);
+    });
     
     const keydownEvents = (evt)=>{
         if(props.isOpen && (evt.code === 'Space' || evt.code === 'Enter')) // only when the modal is opened
