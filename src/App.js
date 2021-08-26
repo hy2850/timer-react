@@ -1,57 +1,47 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
+
 import './styles/App.css';
 import Timer from './components/Timer';
 import GeneralSettingsModal from './components/GeneralSettingsModal.js';
 
+const MINIUTE = 60;
+
 function App(props) {
   const [toggleSecond, setToggleSecond] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [key, setKey] = useState(0);
 
-  // Default initTime
-  const MINIUTE = 60;
-  const INIT_TIME = {
+  // Initial time settings
+  let initTimeObj = { 
     shortTT : 25 * MINIUTE,
     shortBT: 5 * MINIUTE,
     longTT : 50 * MINIUTE,
     longBT: 10 * MINIUTE,
   }; // TT : Timer Time, BT : Break Time
-  const [initTimeObj, setInitTimeObj] = useState(INIT_TIME); // stores initial time settings for both timers
 
-
-  // =============================================================================
-  // [Cache] Retrieve saved settings from localStorage
-  useEffect(()=>{
-    //localStorage.clear();
-    let generalCache = localStorage.getItem('generalSettings-json')
-    if (generalCache){
-      setSettingsObj(JSON.parse(generalCache));
-    }
-
-    let timeCache = localStorage.getItem('initTimeSettings-json')
-    if (timeCache){
-      setInitTimeObj(initTimeObj => Object.assign({}, initTimeObj, JSON.parse(timeCache)));
-    }
-  }, []);
-
-
-  // =============================================================================
   // General settings - for both timers : volume, autostart, ...
-  const [genSettingsObj, setSettingsObj] = useState({
+  let genSettingsObj = {
     volume: 1,
     autoStart: false,
-    onNoti: false
-  });
-  const [key, setKey] = useState(0);
+    //onNoti: false // controlled by Redux
+  };
 
-  useEffect(()=>{
-    setKey(key=>key+1); // re-render Timer components by changing the key
-    localStorage.setItem('generalSettings-json', JSON.stringify(genSettingsObj)); // cache general settings
-  }, [genSettingsObj]);
+  // [Cache] Retrieve saved settings from localStorage
+  let generalCache = localStorage.getItem('generalSettings-json')
+  if (generalCache) genSettingsObj = JSON.parse(generalCache);
 
+  let timeCache = localStorage.getItem('initTimeSettings-json')
+  if (timeCache) initTimeObj = JSON.parse(timeCache);
+  
+
+  // =============================================================================
   // Called when general settings modal closes
   function applySettings(settingsObj){
     //console.log("--Applying general settings - expecting re-rendering--")
-    setSettingsObj(settingsObj)
+
+    genSettingsObj = settingsObj;
+    localStorage.setItem('generalSettings-json', JSON.stringify(settingsObj)); // cache general settings
+    setKey(key=>key+1); // re-render Timer components by changing the key
   }
 
 
@@ -82,7 +72,6 @@ function App(props) {
           type = "SHORT" 
           settings = {Object.assign({}, genSettingsObj, 
                                         {timerTime:initTimeObj.shortTT, breakTime:initTimeObj.shortBT})}
-          update_initTime = {setInitTimeObj}
         >
         </Timer>
         {toggleSecond ?
@@ -91,7 +80,6 @@ function App(props) {
             type = "LONG" 
             settings = {Object.assign({}, genSettingsObj, 
                                           {timerTime:initTimeObj.longTT, breakTime:initTimeObj.longBT})}
-            update_initTime = {setInitTimeObj}
           >
           </Timer>
           : null
