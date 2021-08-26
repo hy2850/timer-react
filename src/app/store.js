@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import notiReducer from '../slices/notiSlice';
 
 import {
+  persistStore,
   persistReducer,
   FLUSH,
   REHYDRATE,
@@ -11,8 +12,6 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-
-import {combineReducers} from "redux";
 
 const persistConfig = {
   key: 'root',
@@ -31,3 +30,5 @@ export const store = configureStore({
       },
     }),
 })
+
+export const persistor = persistStore(store);
