@@ -77,6 +77,10 @@ countDown 재활용해서 break 모드 만들기
       → single-threaded JS의 setInterval 구조적 한계?
       https://stackoverflow.com/questions/23506103/setinterval-slows-down-with-tab-window-inactive
 
+- [x] <span style="color:blue">[12Sep21'R']</span> (After changing time on short timer) Changing genSettings while timer is running causes long timer to have undefined time
+
+- [ ] Running long timer after short timer alternates browser tab title
+
 </br>
 
 ###**Further works**

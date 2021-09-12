@@ -29,9 +29,11 @@ function App(props) {
   // [Cache] Retrieve saved settings from localStorage
   let generalCache = localStorage.getItem('generalSettings-json')
   if (generalCache) genSettingsObj = JSON.parse(generalCache);
+  else localStorage.setItem('generalSettings-json', JSON.stringify(genSettingsObj)); // Init localStorage
 
   let timeCache = localStorage.getItem('initTimeSettings-json')
   if (timeCache) initTimeObj = JSON.parse(timeCache);
+  else localStorage.setItem('initTimeSettings-json', JSON.stringify(initTimeObj)); // Init localStorage
   
 
   // =============================================================================
