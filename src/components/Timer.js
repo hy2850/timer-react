@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
+import { useSelector } from 'react-redux';
 import {useInterval, useUpdateEffect} from 'react-use';
-import { useSelector, useDispatch } from 'react-redux';
-import { turnOn, turnOff } from '../slices/shortOnSlice';
 import moment from 'moment';
 import '../styles/Timer.css';
 
@@ -34,23 +33,17 @@ function Timer(props) {
     const [key, setKey] = useState(0); // to re-render child component writableClock.js
 
     // Redux
-    const onNoti = useSelector(state => state.notiReducer.onNoti);
-    const isShortOn = useSelector(state => state.shortOnReducer.isShortOn);
-    const dispatch = useDispatch();
-    
+    const onNoti = useSelector(state => state.onNoti);
+
 
     //======================================================
     // init - set keyboard keydown
     useLayoutEffect(()=>{
-        console.log(`${props.type} rendered - onShort ${isShortOn}`) // #ifdef
-
         document.addEventListener('keydown', keydownEvents);
         return ()=>document.removeEventListener('keydown', keydownEvents);
     });
 
     const keydownEvents = (evt)=>{
-        console.log(`${props.type} ${evt.code}`) // #ifdef
-
         if(evt.code === 'Space')
             setDidStart(didStart => !didStart);
         else if (evt.code === 'KeyR'){
@@ -67,13 +60,11 @@ function Timer(props) {
     // =============================================================================
     // Update clock
     useUpdateEffect(() => {
-        console.log(`${props.type} useEffect[curTime] - ${curTime}`) // #ifdef
-
         setKey(key => key + 1); // re-render writableClock
         
         // Update browser tab title with short clock
         if(didStart){
-            if(props.type === "LONG" && isShortOn)
+            if (props.type === 'LONG')
                 return;
 
             let min = Math.floor(curTime/MINUTE); min = min.toString();
@@ -86,23 +77,10 @@ function Timer(props) {
 
     // countDown
     useEffect(() => {
-        console.log(`${props.type} useEffect[didStart] : didStart ${didStart} - onShort ${isShortOn}`) // #ifdef
-
-        if(didStart){
+        if(didStart)
             anchorDate.current = moment().add(curTime, 's');
-
-            if(props.type === "SHORT")
-                dispatch(turnOn());
-        }
-        else{
-            if(props.type === "LONG" && isShortOn)
-                return;
-
+        else if(props.type === "SHORT")
             document.title = TITLE;
-            
-            if(props.type === "SHORT")
-                dispatch(turnOff());
-        }
     }, [didStart]);
 
     useInterval(() => {
