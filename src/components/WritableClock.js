@@ -12,7 +12,6 @@ export default function WritableClock(props) {
 
     // Init time with props.time
     useLayoutEffect(()=>{
-        //console.log(`WritableClock is rendering : ${props.time}`);
         let min = Math.floor(props.time/MINIUTE); min = min.toString().padStart(2, '0');
         let sec = props.time%MINIUTE; sec = sec.toString().padStart(2, '0');
         setMin(min); setSec(sec);
@@ -49,7 +48,7 @@ export default function WritableClock(props) {
             alert(`${type} must be a number between 0 to ${target===MIN ? 99 : 59}`);
         }
         if((0 <= newT && newT < (target === MIN ? 100 : 60)) && oldT !== newT){
-            console.log(`Changing ${type} from ${oldT} to ${newT}`); // DEBUG            
+            // console.log(`Changing ${type} from ${oldT} to ${newT}`); // #ifdef DEBUG            
             const changedTime = target === MIN ? newT*MINIUTE + parseInt(sec) : parseInt(min)*MINIUTE + newT;            
             props.update(changedTime);
         } 

@@ -37,10 +37,8 @@ function App(props) {
   
 
   // =============================================================================
-  // Called when general settings modal closes
+  // Called when general settings modal closes (Applying general settings)
   function applySettings(settingsObj){
-    //console.log("--Applying general settings - expecting re-rendering--")
-
     genSettingsObj = settingsObj;
     localStorage.setItem('generalSettings-json', JSON.stringify(settingsObj)); // cache general settings
     setKey(key=>key+1); // re-render Timer components by changing the key
