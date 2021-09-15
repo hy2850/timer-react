@@ -44,6 +44,8 @@ function Timer(props) {
     });
 
     const keydownEvents = (evt)=>{
+        //console.log(`${props.type} - ${evt.code}`) // #ifdef
+        
         if(evt.code === 'Space')
             setDidStart(didStart => !didStart);
         else if (evt.code === 'KeyR'){
@@ -106,7 +108,6 @@ function Timer(props) {
         // Break start
         if(onBreak){
             anchorDate.current = moment().add(initBreak.current, 's');
-            console.log("Break start : ", moment(), anchorDate.current)
             setDidStart(true); // start break
             sendNotification(true);
         }
@@ -122,7 +123,7 @@ function Timer(props) {
     // =============================================================================
     // Reset/pause timer
     function reset(doPause = false){
-        //console.log(doPause ? "Pausing" : "Resetting");
+        // console.log(doPause ? "Pausing" : "Resetting"); // #ifdef
         setDidStart(false);
     
         // resetting, not pause
@@ -157,7 +158,6 @@ function Timer(props) {
 
     // Send browser notification (tested on Chrome)
     function sendNotification(breakStart = true){
-        console.log("Noti : ", onNoti);
         if(!onNoti) return;
         
         const type = `${props.type === "SHORT" ? "Short" : "Long"}`;
@@ -170,10 +170,7 @@ function Timer(props) {
         });
 
         notification.addEventListener('click', (evt) => {
-            //parent.focus();
             window.focus();
-            console.log(evt.target);
-            //evt.target.close();
         });
     }
 
