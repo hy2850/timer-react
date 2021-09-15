@@ -1,5 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
+
+import { combineReducers } from 'redux'
 import notiReducer from '../slices/notiSlice';
+import shortOnReducer from '../slices/shortOnSlice';
 
 import {
   persistStore,
@@ -19,7 +22,12 @@ const persistConfig = {
   version: 1,
 }
 
-const persistedReducer = persistReducer(persistConfig, notiReducer)
+const rootReducer = combineReducers({
+  notiReducer,
+  shortOnReducer
+})
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
