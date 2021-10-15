@@ -2,7 +2,7 @@
 
 Easily get time notification for short breaks and long breaks in a single webpage
 
-![overview](.\img\overview.jpg)
+![overview](./img/overview.jpg)
 
 
 
@@ -14,7 +14,7 @@ When the main timer is done, it automatically goes into break mode.
 
 When the break is over, the timer ends (unless 'autostart' option is ON)
 
-![timer_and_break](.\img\timer_and_break.gif)
+![timer_and_break](./img/timer_and_break.gif)
 
 <br>
 
@@ -22,7 +22,7 @@ Manually switch modes
 
 If you think you need another break, go ahead!
 
-![switch_mode](.\img\switch_mode.gif)
+![switch_mode](./img/switch_mode.gif)
 
 
 
@@ -34,7 +34,7 @@ Change your clock settings by just click-and-write.
 
 All settings are saved for future re-visits.
 
-![writable](.\img\writable.gif)
+![writable](./img/writable.gif)
 
 
 
